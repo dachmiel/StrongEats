@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
+
 # List of exercise options with corresponding calorie burn rates (per minute)
 exercise_options = {
     "Running": 10,
