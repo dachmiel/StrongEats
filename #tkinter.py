@@ -1,5 +1,19 @@
 import tkinter as tk
 from tkinter import messagebox
+import sqlite3
+
+
+#creates database and cursor
+conn = sqlite3.connect('login_info.db')
+c = conn.cursor()
+
+# create table, current database is stored with a local file
+# If you don't have this file already, uncomment this block to create it
+'''c.execute("""CREATE TABLE users (
+        username text,
+        password text
+        )
+""")'''
 
 
 # List of exercise options with corresponding calorie burn rates (per minute)
@@ -12,13 +26,16 @@ exercise_options = {
     "Other": 6
 }
 
-# Function to simulate login and transition to the home page
+#create login function for database
 def login():
+    conn2 = sqlite3.connect('login_info.db')
+    c2 = conn2.cursor()
+
+    c2.execute("SELECT * FROM users")
+    allUsers = c2.fetchall()
     username = entry_username.get()
     password = entry_password.get()
-
-    # Simulated authentication logic (replace with actual authentication)
-    if username == "login" and password == "login":
+    if (username, password) in allUsers:
         messagebox.showinfo("Login Successful", "Login Successful")
         # Close the login window
         root.destroy()
@@ -26,6 +43,39 @@ def login():
         open_home_page()
     else:
         messagebox.showerror("Login Failed", "Invalid username or password")
+
+    conn2.commit()
+    conn2.close()
+    return
+
+#create account function for database
+def createAccount():
+    conn2 = sqlite3.connect('login_info.db')
+    c2 = conn2.cursor()
+
+    # Insert into table
+    c2.execute("SELECT username FROM users")
+    allUsernames = c2.fetchall()
+    username = entry_username.get()
+    password = entry_password.get()
+    if username == "" or password == "":
+        messagebox.showerror("Cannot Create Account", "Invalid username or password")
+    elif (username,) in allUsernames:
+        messagebox.showerror("Cannot Create Account", "This username is already in use")
+    else:
+        c2.execute("INSERT INTO users VALUES (:username, :password)", 
+                {
+                    'username': username,
+                    'password': password})
+        messagebox.showinfo("Account Creation Successful", "Account Creation Successful")
+        # Close the login window
+        root.destroy()
+        # Open the workout tracking page
+        open_home_page()
+
+    conn2.commit()
+    conn2.close()
+    return
 
 def open_home_page():
     home_window = tk.Tk()
@@ -157,6 +207,10 @@ entry_password.pack(pady=5)
 # Create a login button with iPhone-style appearance
 login_button = tk.Button(root, text="Login", command=login, font=("Helvetica", 16), bg="#007AFF", fg="black", relief="flat", padx=20, pady=10)
 login_button.pack(pady=20)
+
+# Create account button with iPhone-style appearance
+create_button = tk.Button(root, text="Create Account", command=createAccount, font=("Helvetica", 16), bg="#007AFF", fg="black", relief="flat", padx=20, pady=10)
+create_button.pack()
 
 # Start the Tkinter main loop
 root.mainloop()
