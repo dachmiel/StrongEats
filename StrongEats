@@ -1,0 +1,180 @@
+import tkinter as tk
+from tkinter import messagebox, ttk
+
+# List of exercise options with corresponding calorie burn rates (per minute)
+exercise_options = {
+    "Running": 10,
+    "Cycling": 8,
+    "Swimming": 12,
+    "Weightlifting": 5,
+    "Yoga": 4,
+    "Other": 6
+}
+
+def back_button():
+    back_button = ttk.Button(root.winfo_children()[-1], text="Previous Page", command=show_home_screen)
+    back_button.pack(pady=10)
+# Function to simulate login and transition to the home page
+def login():
+    username = entry_username.get()
+    password = entry_password.get()
+
+    # Simulated authentication logic (replace with actual authentication)
+    if username == "login" and password == "password":
+        messagebox.showinfo("Login Successful", "Login Successful")
+        show_home_screen()
+    else:
+        messagebox.showerror("Login Failed", "Invalid username or password")
+
+def hide_frames():
+    for frame in root.winfo_children():
+        frame.pack_forget()
+
+def show_login_screen():
+    hide_frames()
+    login_frame.pack()
+
+def show_home_screen():
+    hide_frames()
+    home_frame.pack()
+
+def show_settings_screen():
+    hide_frames()
+    # settings_frame.pack()
+
+# Function to open the meal entry screen
+def add_meal():
+    hide_frames()
+    meal_frame.pack()
+
+# Function to open the workout tracking page
+def open_workout_page():
+    hide_frames()
+    workout_frame.pack()
+
+# Function to calculate calories based on exercise and duration
+def calculate_calories():
+    exercise = exercise_var.get()
+    duration = entry_duration.get()
+    try:
+        duration = float(duration)
+        if exercise in exercise_options:
+            calorie_burn_rate = exercise_options[exercise]
+            calories_burned = duration * calorie_burn_rate
+            calories_var.set(f"{calories_burned:.2f} calories")
+        else:
+            calories_var.set("Unknown Exercise")
+    except ValueError:
+        calories_var.set("Invalid Duration")
+
+# Function to open the past workout update screen
+def update_past_workout():
+    hide_frames()
+    past_workout_frame.pack()
+
+
+# Function to open the profile information update screen
+def update_profile_info():
+    hide_frames()
+    profile_window_frame.pack()
+
+
+
+# Root Window
+root = tk.Tk()
+root.title("StrongEats")
+root.geometry("360x650")
+
+# Configure the default styles of button, label, entry
+style = ttk.Style()
+style.configure('TButton', font=("Helvetica", 16), bg="#007AFF", fg="black", relief="flat", padx=20, pady=10)
+style.configure('TLabel', font=("Helvetica", 14))
+style.configure('TEntry', font=("Helvetica", 14))
+
+# Login Frame
+login_frame = tk.Frame(root)
+login_label = ttk.Label(login_frame, text="Welcome Back", font=("Helvetica", 20, "bold"))
+login_label.pack(pady=20)
+# Create labels and entries for username
+label_username = ttk.Label(login_frame, text="Email")
+label_username.pack(pady=10)
+entry_username = ttk.Entry(login_frame)
+entry_username.pack(pady=5)
+# Create labels and entries for password
+label_password = ttk.Label(login_frame, text="Password")
+label_password.pack(pady=10)
+entry_password = ttk.Entry(login_frame, show="*")
+entry_password.pack(pady=5)
+# Create a login button
+login_button = tk.Button(login_frame, text="Login", command=login, font=("Helvetica", 16), bg="#007AFF", fg="black",
+                         relief="flat", padx=20, pady=10)
+login_button.pack(pady=20)
+
+# Home Frame
+home_frame = tk.Frame(root)
+# Create a label for the home page title
+title_label = ttk.Label(home_frame, text="Your Dashboard", font=("Helvetica", 20, "bold"))
+title_label.pack(pady=20)
+# Home Screen Buttons
+start_workout_button = ttk.Button(home_frame, text="Start Workout", command=open_workout_page)
+start_workout_button.pack(pady=10)
+add_meal_button = ttk.Button(home_frame, text="Add Meal", command=add_meal)
+add_meal_button.pack(pady=10)
+update_past_workout_button = ttk.Button(home_frame, text="Update Past Workout", command=update_past_workout)
+update_past_workout_button.pack(pady=10)
+update_profile_info_button = ttk.Button(home_frame, text="Update Profile Information", command=update_profile_info)
+update_profile_info_button.pack(pady=10)
+
+# Add Meal Frame
+meal_frame = tk.Frame(root)
+# Create labels and widgets for the meal entry screen here
+label_meal = ttk.Label(meal_frame, text="Welcome to Meal Tracker", font=("Helvetica", 20, "bold"))
+label_meal.pack(pady=20)
+# Add meal-related widgets here (e.g., food selection, calories, etc.)
+back_button()
+
+# Start Workout Frame
+workout_frame = tk.Frame()
+# Add workout tracking content here
+label_workout = ttk.Label(workout_frame, text="Workout Tracking", font=("Helvetica", 20, "bold"))
+label_workout.pack(pady=20)
+# Dropdown menu for exercise selection
+label_exercise = ttk.Label(workout_frame, text="Exercise:")
+label_exercise.pack(pady=10)
+exercise_var = tk.StringVar()
+exercise_dropdown = tk.OptionMenu(workout_frame, exercise_var, *exercise_options.keys())
+exercise_dropdown.config(font=("Helvetica", 12))
+exercise_dropdown.pack(pady=5)
+exercise_var.set(list(exercise_options.keys())[0])  # Set the default option
+label_duration = ttk.Label(workout_frame, text="Duration (min):")
+label_duration.pack(pady=10)
+entry_duration = ttk.Entry(workout_frame)
+entry_duration.pack(pady=5)
+label_calories = ttk.Label(workout_frame, text="Calories Burned:")
+label_calories.pack(pady=10)
+calories_var = tk.StringVar()
+label_calories_value = ttk.Label(workout_frame, textvariable=calories_var)
+label_calories_value.pack(pady=5)
+# Button to calculate calories
+calculate_button = ttk.Button(workout_frame, text="Calculate Calories", command=calculate_calories)
+calculate_button.pack(pady=20)
+back_button()
+
+# Past Workout Frame
+past_workout_frame = tk.Frame()
+# Create labels and widgets for updating past workouts here
+label_past_workout = ttk.Label(past_workout_frame, text="Update Past Workout", font=("Helvetica", 20, "bold"))
+label_past_workout.pack(pady=20)
+# Add widgets to update past workouts here (e.g., select date, exercises, etc.)
+back_button()
+
+# Profile Window Frame
+profile_window_frame = tk.Frame()
+# Create labels and widgets for updating profile information here
+label_profile = ttk.Label(profile_window_frame, text="Update Profile Information", font=("Helvetica", 20, "bold"))
+label_profile.pack(pady=20)
+back_button()
+
+# Start the Tkinter main loop
+login_frame.pack()
+root.mainloop()
