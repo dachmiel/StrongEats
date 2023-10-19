@@ -150,9 +150,9 @@ def show_calorie_tracker():
 
 
 # Function to open workout settings page
-def show_workout_settings():
+def show_workout_plan_settings():
     hide_frames()
-    WorkoutSettings.frame.pack()
+    WorkoutPlanSettings.frame.pack()
 
 
 # Function to calculate calories based on exercise and duration
@@ -179,17 +179,17 @@ def calculate_calories():
 
 
 # Function to open the past workout update screen
-def show_record_new_workout():
+def show_add_new_workout():
     hide_frames()
-    RecordNewWorkout.frame.pack()
+    AddNewWorkout.frame.pack()
 
 
 def save_workout():
-    workout_to_submit = RecordNewWorkout.workout_var.get()
-    workout_date = RecordNewWorkout.entry_date.get()
-    workout_sets = RecordNewWorkout.entry_sets.get()
-    workout_reps = RecordNewWorkout.entry_reps.get()
-    workout_weight = RecordNewWorkout.entry_weight.get()
+    workout_to_submit = AddNewWorkout.workout_var.get()
+    workout_date = AddNewWorkout.entry_date.get()
+    workout_sets = AddNewWorkout.entry_sets.get()
+    workout_reps = AddNewWorkout.entry_reps.get()
+    workout_weight = AddNewWorkout.entry_weight.get()
     date_pattern = r"\d{2}/\d{2}/\d{4}"
 
     if workout_to_submit == "Select a workout":
@@ -237,20 +237,20 @@ def save_workout():
         return
 
     else:
-        RecordNewWorkout.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
+        AddNewWorkout.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
                                 {
                                     'user': globalUser,
-                                    'date': RecordNewWorkout.entry_date.get(),
-                                    'workout': RecordNewWorkout.workout_var.get() + "::" + RecordNewWorkout.entry_sets.get() + "::" + RecordNewWorkout.entry_reps.get() + "::" + RecordNewWorkout.entry_weight.get()
+                                    'date': AddNewWorkout.entry_date.get(),
+                                    'workout': AddNewWorkout.workout_var.get() + "::" + AddNewWorkout.entry_sets.get() + "::" + AddNewWorkout.entry_reps.get() + "::" + AddNewWorkout.entry_weight.get()
                                 })
-        RecordNewWorkout.conn2.commit()
-        RecordNewWorkout.conn2.close()
+        AddNewWorkout.conn2.commit()
+        AddNewWorkout.conn2.close()
 
-        RecordNewWorkout.workout_var.set("Select a workout")
-        RecordNewWorkout.entry_date.delete(0, 'end')
-        RecordNewWorkout.entry_sets.delete(0, 'end')
-        RecordNewWorkout.entry_reps.delete(0, 'end')
-        RecordNewWorkout.entry_weight.delete(0, 'end')
+        AddNewWorkout.workout_var.set("Select a workout")
+        AddNewWorkout.entry_date.delete(0, 'end')
+        AddNewWorkout.entry_sets.delete(0, 'end')
+        AddNewWorkout.entry_reps.delete(0, 'end')
+        AddNewWorkout.entry_weight.delete(0, 'end')
 
         messagebox.showinfo("Workout Submitted Successfully", "Workout Submitted Successfully")
 
@@ -262,9 +262,9 @@ def show_update_profile_info():
 
 
 def save_workout_settings():
-    experience = WorkoutSettings.exercise_var
-    days_per_week = WorkoutSettings.days_var.get()
-    session_length = WorkoutSettings.len_var.get()
+    experience = WorkoutPlanSettings.exercise_var
+    days_per_week = WorkoutPlanSettings.days_var.get()
+    session_length = WorkoutPlanSettings.len_var.get()
     if experience == "Select an option":
         messagebox.showerror("Error", "Please select an option")
         return
@@ -335,6 +335,21 @@ def save_profile_settings():
 
     else:
         messagebox.showinfo("Saved Changes", "Changes Saved Successfully")
+
+
+def show_meal_history():
+    hide_frames()
+    MealHistory.frame.pack()
+
+
+def show_workout_history():
+    hide_frames()
+    WorkoutHistory.frame.pack()
+
+
+def show_meal_plan_settings():
+    hide_frames()
+    MealPlanSettings.frame.pack()
 
 
 # Root Window
@@ -411,14 +426,17 @@ class Home:
     calorie_tracker_button = MyButton(frame, text="Track Calories", command=show_calorie_tracker)
     calorie_tracker_button.pack(pady=10)
 
-    new_workout_button = MyButton(frame, text="Record New Workout", command=show_record_new_workout)
+    new_workout_button = MyButton(frame, text="Add Workout", command=show_add_new_workout)
     new_workout_button.pack(pady=10)
 
     add_meal_button = MyButton(frame, text="Add Meal", command=show_meal_page)
     add_meal_button.pack(pady=10)
 
-    workout_settings_button = MyButton(frame, text="Workout Settings", command=show_workout_settings)
-    workout_settings_button.pack(pady=10)
+    meal_plan_settings_button = MyButton(frame, text="Meal Plan Settings", command=show_meal_plan_settings)
+    meal_plan_settings_button.pack(pady=10)
+
+    workout_plan_settings_button = MyButton(frame, text="Workout Plan Settings", command=show_workout_plan_settings)
+    workout_plan_settings_button.pack(pady=10)
 
     update_profile_info_button = MyButton(frame, text="Update Profile Information", command=show_update_profile_info)
     update_profile_info_button.pack(pady=10)
@@ -434,6 +452,13 @@ class Meal:
     label_meal = MyLabel(frame, text="Welcome to Meal Tracker", font_size=20, bold=True)
     label_meal.pack(pady=20)
     # Add meal-related widgets here (e.g., food selection, calories, etc.)
+    back_button()
+
+
+class MealHistory:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Meal History", font_size=20, bold=True)
+    label_meal.pack(pady=20)
     back_button()
 
 
@@ -467,14 +492,14 @@ class CalorieTracker:
     back_button()
 
 
-# Record New Workout Frame
-class RecordNewWorkout:
+# Add New Workout Frame
+class AddNewWorkout:
     frame = tk.Frame()
     # Opens database to access workout history
     conn2 = sqlite3.connect('login_info.db')
     c2 = conn2.cursor()
     # Create labels and widgets for updating past workouts here
-    label_past_workout = MyLabel(frame, text="Record New Workout", font_size=20, bold=True)
+    label_past_workout = MyLabel(frame, text="Add New Workout", font_size=20, bold=True)
     label_past_workout.pack(pady=20)
 
     label_enter_date = MyLabel(frame, text="Enter Date (MM/DD/YYYY):")
@@ -513,14 +538,21 @@ class RecordNewWorkout:
 
     submit_workout_button = tk.Button(frame, text="Submit", command=save_workout)
     submit_workout_button.pack(pady=10)
-    # Add widgets to record new workouts here (e.g., select date, exercises, etc.)
+    # Add widgets to add new workouts here (e.g., select date, exercises, etc.)
+    back_button()
+
+
+class WorkoutHistory:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Workout History", font_size=20, bold=True)
+    label_meal.pack(pady=20)
     back_button()
 
 
 # Workout Settings Frame
-class WorkoutSettings:
+class WorkoutPlanSettings:
     frame = tk.Frame()
-    label_meal = MyLabel(frame, text="Workout Settings", font_size=20, bold=True)
+    label_meal = MyLabel(frame, text="Workout Plan Settings", font_size=20, bold=True)
     label_meal.pack(pady=20)
 
     label_exercise = MyLabel(frame, text="Experience:")
@@ -550,6 +582,13 @@ class WorkoutSettings:
 
     save_button = tk.Button(frame, text="Save Changes", command=save_workout_settings)
     save_button.pack(pady=10)
+    back_button()
+
+
+class MealPlanSettings:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Meal Plan Settings", font_size=20, bold=True)
+    label_meal.pack(pady=20)
     back_button()
 
 
