@@ -111,7 +111,7 @@ def create_account():
         # Set username variable
         globalUser = username
         # Open the home page
-        show_home_screen()
+        show_update_profile_info()
     conn2.commit()
     conn2.close()
     return
