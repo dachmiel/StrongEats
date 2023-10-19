@@ -119,7 +119,7 @@ def hide_frames():
 
 def back_button():
     button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_home_screen)
-    button.pack(pady=10)
+    button.pack(pady=20)
 
 
 def show_login_screen():
@@ -139,7 +139,7 @@ def show_meal_page():
 
 
 # Function to open the workout tracking page
-def show_workout_page():
+def show_calorie_tracker():
     hide_frames()
     Workout.frame.pack()
 
@@ -166,30 +166,30 @@ def calculate_calories():
 
 
 # Function to open the past workout update screen
-def show_update_past_workouts():
+def show_record_new_workout():
     hide_frames()
-    PastWorkouts.frame.pack()
+    RecordNewWorkout.frame.pack()
 
 
 def save_workout():
-    workout_to_submit = PastWorkouts.workout_var.get()
+    workout_to_submit = RecordNewWorkout.workout_var.get()
     if workout_to_submit == "Select a workout":
         messagebox.showerror("Error", "Please select a workout from the drop down")
     else:
-        PastWorkouts.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
+        RecordNewWorkout.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
                                 {
                                     'user': globalUser,
-                                    'date': PastWorkouts.entry_date.get(),
-                                    'workout': PastWorkouts.workout_var.get() + "::" + PastWorkouts.entry_sets.get() + "::" + PastWorkouts.entry_reps.get() + "::" + PastWorkouts.entry_weight.get()
+                                    'date': RecordNewWorkout.entry_date.get(),
+                                    'workout': RecordNewWorkout.workout_var.get() + "::" + RecordNewWorkout.entry_sets.get() + "::" + RecordNewWorkout.entry_reps.get() + "::" + RecordNewWorkout.entry_weight.get()
                                 })
-        PastWorkouts.conn2.commit()
-        PastWorkouts.conn2.close()
+        RecordNewWorkout.conn2.commit()
+        RecordNewWorkout.conn2.close()
 
-        PastWorkouts.workout_var.set("Select a workout")
-        PastWorkouts.entry_date.delete(0, 'end')
-        PastWorkouts.entry_sets.delete(0, 'end')
-        PastWorkouts.entry_reps.delete(0, 'end')
-        PastWorkouts.entry_weight.delete(0, 'end')
+        RecordNewWorkout.workout_var.set("Select a workout")
+        RecordNewWorkout.entry_date.delete(0, 'end')
+        RecordNewWorkout.entry_sets.delete(0, 'end')
+        RecordNewWorkout.entry_reps.delete(0, 'end')
+        RecordNewWorkout.entry_weight.delete(0, 'end')
 
         messagebox.showinfo("Workout Submitted Successfully", "Workout Submitted Successfully")
 
@@ -220,11 +220,20 @@ class MyButton(tk.Button):
         )
 
 
+class MyLabel(tk.Label):
+    def __init__(self, master=None, font_size=12, bold=False, **kwargs):
+        super().__init__(master, **kwargs)
+        font_weight = "bold" if bold else "normal"
+        self.configure(
+            font=("Helvetica", font_size, font_weight)
+        )
+
+
 # FRAMES (Simulates new pages)
 # Login Page Frame
 class Login:
     frame = tk.Frame(root)
-    login_label = tk.Label(frame, text="Welcome Back", font=("Helvetica", 20, "bold"))
+    login_label = MyLabel(frame, text="Welcome Back", font_size=20, bold=True)
     login_label.pack(pady=20)
     # Create labels and entries for username
     label_username = tk.Label(frame, text="Username")
@@ -237,13 +246,10 @@ class Login:
     entry_password = tk.Entry(frame, show="*")
     entry_password.pack(pady=5)
     # Create a login button
-    login_button = tk.Button(frame, text="Login", command=login, font=("Helvetica", 16), bg="#007AFF", fg="black",
-                             relief="flat", padx=20, pady=10)
+    login_button = MyButton(frame, text="Login", command=login)
     login_button.pack(pady=20)
     # Create account button
-    create_account_button = tk.Button(frame, text="Create Account", command=create_account, font=("Helvetica", 16),
-                                      bg="#007AFF", fg="black",
-                                      relief="flat", padx=20, pady=10)
+    create_account_button = MyButton(frame, text="Create Account", command=create_account)
     create_account_button.pack(pady=20)
 
 
@@ -251,18 +257,18 @@ class Login:
 class Home:
     frame = tk.Frame(root)
     # Create a label for the home page title
-    title_label = tk.Label(frame, text="Your Dashboard", font=("Helvetica", 20, "bold"))
+    title_label = MyLabel(frame, text="Your Dashboard", font_size=20, bold=True)
     title_label.pack(pady=20)
 
     # Home Screen Buttons
-    start_workout_button = MyButton(frame, text="Start Workout", command=show_workout_page)
-    start_workout_button.pack(pady=10)
+    calorie_tracker_button = MyButton(frame, text="Track Calories", command=show_calorie_tracker)
+    calorie_tracker_button.pack(pady=10)
+
+    new_workout_button = MyButton(frame, text="Record New Workout", command=show_record_new_workout)
+    new_workout_button.pack(pady=10)
 
     add_meal_button = MyButton(frame, text="Add Meal", command=show_meal_page)
     add_meal_button.pack(pady=10)
-
-    update_past_workout_button = MyButton(frame, text="Update Past Workout", command=show_update_past_workouts)
-    update_past_workout_button.pack(pady=10)
 
     workout_settings_button = MyButton(frame, text="Workout Settings", command=show_workout_settings)
     workout_settings_button.pack(pady=10)
@@ -278,7 +284,7 @@ class Home:
 class Meal:
     frame = tk.Frame(root)
     # Create labels and widgets for the meal entry screen here
-    label_meal = tk.Label(frame, text="Welcome to Meal Tracker", font=("Helvetica", 20, "bold"))
+    label_meal = MyLabel(frame, text="Welcome to Meal Tracker", font_size=20, bold=True)
     label_meal.pack(pady=20)
     # Add meal-related widgets here (e.g., food selection, calories, etc.)
     back_button()
@@ -288,7 +294,7 @@ class Meal:
 class Workout:
     frame = tk.Frame()
     # Add workout tracking content here
-    label_workout = tk.Label(frame, text="Workout Tracking", font=("Helvetica", 20, "bold"))
+    label_workout = MyLabel(frame, text="Calorie Tracker", font_size=20, bold=True)
     label_workout.pack(pady=20)
     # Dropdown menu for exercise selection
     label_exercise = tk.Label(frame, text="Exercise:")
@@ -317,23 +323,23 @@ class Workout:
 # Update Workout Info Frame
 class WorkoutSettings:
     frame = tk.Frame()
-    label_meal = tk.Label(frame, text="Workout Settings", font=("Helvetica", 20, "bold"))
+    label_meal = MyLabel(frame, text="Workout Settings", font_size=20, bold=True)
     label_meal.pack(pady=20)
-    label_exercise = tk.Label(frame, text="Experience:", font=("Helvetica", 12))
+    label_exercise = MyLabel(frame, text="Experience:")
     label_exercise.pack(pady=10)
     exercise_var = tk.StringVar()
     exercise_dropdown = tk.OptionMenu(frame, exercise_var, *exp_vars.keys())
     exercise_dropdown.config(font=("Helvetica", 12))
     exercise_dropdown.pack(pady=5)
     exercise_var.set(list(exp_vars.keys())[0])  # Set the default option
-    label_days = tk.Label(frame, text="How often do you want to work out:", font=("Helvetica", 12))
+    label_days = MyLabel(frame, text="How often do you want to work out:")
     label_days.pack(pady=10)
     days_var = tk.StringVar()
     days_dropdown = tk.OptionMenu(frame, days_var, *days_nums.keys())
     days_dropdown.config(font=("Helvetica", 12))
     days_dropdown.pack(pady=5)
     days_var.set(list(days_nums.keys())[0])  # Set the default option
-    label_len = tk.Label(frame, text="How long do you want to work out for:", font=("Helvetica", 12))
+    label_len = MyLabel(frame, text="How long do you want to work out for:")
     label_len.pack(pady=10)
     len_var = tk.StringVar()
     len_dropdown = tk.OptionMenu(frame, len_var, *len_vars.keys())
@@ -347,23 +353,23 @@ class WorkoutSettings:
     back_button()
 
 
-# Update Past Workouts Frame
-class PastWorkouts:
+# Record New Workout Frame
+class RecordNewWorkout:
     frame = tk.Frame()
     # Opens database to access workout history
     conn2 = sqlite3.connect('login_info.db')
     c2 = conn2.cursor()
     # Create labels and widgets for updating past workouts here
-    label_past_workout = tk.Label(frame, text="Update Past Workout", font=("Helvetica", 20, "bold"))
+    label_past_workout = MyLabel(frame, text="Record New Workout", font_size=20, bold=True)
     label_past_workout.pack(pady=20)
 
-    label_enter_date = tk.Label(frame, text="Enter Date (MM/DD/YYYY):", font=("Helvetica", 12))
+    label_enter_date = MyLabel(frame, text="Enter Date (MM/DD/YYYY):")
     label_enter_date.pack()
 
     entry_date = tk.Entry(frame, font=("Helvetica", 12))
     entry_date.pack(pady=5)
 
-    label_select_workout = tk.Label(frame, text="Select a workout", font=("Helvetica", 12))
+    label_select_workout = MyLabel(frame, text="Select a workout")
     label_select_workout.pack(pady=10)
 
     c2.execute("SELECT name FROM exercises")
@@ -376,43 +382,43 @@ class PastWorkouts:
     workout_dropdown = tk.OptionMenu(frame, workout_var, *workout_options)
     workout_dropdown.pack()
 
-    label_sets = tk.Label(frame, text="Enter Sets Done", font=("Helvetica", 12))
+    label_sets = MyLabel(frame, text="Enter Sets Done")
     label_sets.pack(pady=10)
     entry_sets = tk.Entry(frame, font=("Helvetica", 12))
     entry_sets.pack(pady=5)
 
-    label_reps = tk.Label(frame, text="Enter Reps Done", font=("Helvetica", 12))
+    label_reps = MyLabel(frame, text="Enter Reps Done")
     label_reps.pack(pady=10)
     entry_reps = tk.Entry(frame, font=("Helvetica", 12))
     entry_reps.pack(pady=5)
 
-    label_weight = tk.Label(frame, text="Enter Weight Used", font=("Helvetica", 12))
+    label_weight = MyLabel(frame, text="Enter Weight Used")
     label_weight.pack(pady=10)
     entry_weight = tk.Entry(frame, font=("Helvetica", 12))
     entry_weight.pack(pady=5)
 
     submit_workout_button = tk.Button(frame, text="Submit", command=save_workout)
     submit_workout_button.pack(pady=10)
-    # Add widgets to update past workouts here (e.g., select date, exercises, etc.)
+    # Add widgets to record new workouts here (e.g., select date, exercises, etc.)
     back_button()
 
 
 class ProfileInfo:
     frame = tk.Frame()
     # Create labels and widgets for updating profile information here
-    label_profile = tk.Label(frame, text="Update Profile Information", font=("Helvetica", 20, "bold"))
+    label_profile = MyLabel(frame, text="Update Profile Information", font_size=20, bold=True)
     label_profile.pack(pady=20)
     # dropdown menus for info
-    label_height = tk.Label(frame, text="Height:", font=("Helvetica", 12))
+    label_height = MyLabel(frame, text="Height:")
     label_height.pack(pady=10)
     exercise_var = tk.StringVar()
     entry_height = tk.Entry(frame, font=("Helvetica", 12))
     entry_height.pack(pady=5)
-    label_weight = tk.Label(frame, text="Weight:", font=("Helvetica", 12))
+    label_weight = MyLabel(frame, text="Weight:")
     label_weight.pack(pady=10)
     entry_weight = tk.Entry(frame, font=("Helvetica", 12))
     entry_weight.pack(pady=5)
-    label_calories = tk.Label(frame, text="Goal Weight:", font=("Helvetica", 12))
+    label_calories = MyLabel(frame, text="Goal Weight:")
     label_calories.pack(pady=10)
     calories_var = tk.StringVar()
     entry_calories_value = tk.Entry(frame, font=("Helvetica", 12))
