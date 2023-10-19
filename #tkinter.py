@@ -162,20 +162,23 @@ def calculate_calories():
     if exercise == "Select an exercise":
         messagebox.showerror("Error", "Please select an exercise from the drop down")
         return
-    elif duration == '' or int(duration) < 0:
+    elif duration == '':
         messagebox.showerror("Error", "Please enter a valid duration")
         return
-
     try:
         duration = float(duration)
-        if exercise in exercise_options:
+        if duration <= 0:
+            messagebox.showerror("Error", "Please enter a valid duration")
+            return
+        elif exercise in exercise_options:
             calorie_burn_rate = exercise_options[exercise]
             calories_burned = duration * calorie_burn_rate
             CalorieTracker.calories_var.set(f"{calories_burned:.2f} calories")
         else:
             CalorieTracker.calories_var.set("Unknown Exercise")
     except ValueError:
-        CalorieTracker.calories_var.set("Invalid Duration")
+        messagebox.showerror("Error", "Please enter a valid duration")
+        return
 
 
 # Function to open the past workout update screen
