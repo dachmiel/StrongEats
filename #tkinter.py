@@ -143,12 +143,13 @@ def show_meal_page():
     Meal.frame.pack()
 
 
-# Function to open the workout tracking page
+# Function to open the calorie tracking page
 def show_calorie_tracker():
     hide_frames()
     CalorieTracker.frame.pack()
 
 
+# Function to open workout settings page
 def show_workout_settings():
     hide_frames()
     WorkoutSettings.frame.pack()
@@ -356,6 +357,7 @@ class MyButton(tk.Button):
         )
 
 
+# Creates default label style so that you don't have to specify everytime
 class MyLabel(tk.Label):
     def __init__(self, master=None, font_size=12, bold=False, **kwargs):
         super().__init__(master, **kwargs)
@@ -365,8 +367,17 @@ class MyLabel(tk.Label):
         )
 
 
-# FRAMES (Simulates new pages)
-# Login Page Frame
+# Creates default entry style so that you don't have to specify everytime
+class MyEntry(tk.Entry):
+    def __init__(self, master=None, font_size=12, bold=False, **kwargs):
+        super().__init__(master, **kwargs)
+        font_weight = "bold" if bold else "normal"
+        self.configure(
+            font=("Helvetica", font_size, font_weight)
+        )
+
+
+# Login Frame
 class Login:
     frame = tk.Frame(root)
     login_label = MyLabel(frame, text="Welcome Back", font_size=20, bold=True)
@@ -389,7 +400,7 @@ class Login:
     create_account_button.pack(pady=20)
 
 
-# Home Page Frame
+# Home Frame
 class Home:
     frame = tk.Frame(root)
     # Create a label for the home page title
@@ -416,7 +427,7 @@ class Home:
     logout_button.pack(pady=10)
 
 
-# Add Meal Frame
+# Meal Frame
 class Meal:
     frame = tk.Frame(root)
     # Create labels and widgets for the meal entry screen here
@@ -426,7 +437,7 @@ class Meal:
     back_button()
 
 
-# Add Workout Frame
+# Calorie Tracker Frame
 class CalorieTracker:
     frame = tk.Frame()
     # Add workout tracking content here
@@ -469,7 +480,7 @@ class RecordNewWorkout:
     label_enter_date = MyLabel(frame, text="Enter Date (MM/DD/YYYY):")
     label_enter_date.pack()
 
-    entry_date = tk.Entry(frame, font=("Helvetica", 12))
+    entry_date = MyEntry(frame)
     entry_date.pack(pady=5)
 
     label_select_workout = MyLabel(frame, text="Select a workout")
@@ -487,17 +498,17 @@ class RecordNewWorkout:
 
     label_sets = MyLabel(frame, text="Enter Sets Done")
     label_sets.pack(pady=10)
-    entry_sets = tk.Entry(frame, font=("Helvetica", 12))
+    entry_sets = MyEntry(frame)
     entry_sets.pack(pady=5)
 
     label_reps = MyLabel(frame, text="Enter Reps Done")
     label_reps.pack(pady=10)
-    entry_reps = tk.Entry(frame, font=("Helvetica", 12))
+    entry_reps = MyEntry(frame)
     entry_reps.pack(pady=5)
 
     label_weight = MyLabel(frame, text="Enter Weight Used (lbs)")
     label_weight.pack(pady=10)
-    entry_weight = tk.Entry(frame, font=("Helvetica", 12))
+    entry_weight = MyEntry(frame)
     entry_weight.pack(pady=5)
 
     submit_workout_button = tk.Button(frame, text="Submit", command=save_workout)
@@ -506,7 +517,7 @@ class RecordNewWorkout:
     back_button()
 
 
-# Update Workout Settings Frame
+# Workout Settings Frame
 class WorkoutSettings:
     frame = tk.Frame()
     label_meal = MyLabel(frame, text="Workout Settings", font_size=20, bold=True)
@@ -542,6 +553,7 @@ class WorkoutSettings:
     back_button()
 
 
+# Profile Settings Frame
 class ProfileSettings:
     frame = tk.Frame()
     # Create labels and widgets for updating profile information here
@@ -550,7 +562,7 @@ class ProfileSettings:
     # dropdown menus for info
     label_age = MyLabel(frame, text="Age:")
     label_age.pack(pady=10)
-    entry_age = tk.Entry(frame, font=("Helvetica", 12))
+    entry_age = MyEntry(frame)
     entry_age.pack(pady=5)
 
     label_height = MyLabel(frame, text="Sex:")
@@ -563,17 +575,17 @@ class ProfileSettings:
 
     label_height = MyLabel(frame, text="Height:")
     label_height.pack(pady=10)
-    entry_height = tk.Entry(frame, font=("Helvetica", 12))
+    entry_height = MyEntry(frame)
     entry_height.pack(pady=5)
 
     label_weight = MyLabel(frame, text="Weight:")
     label_weight.pack(pady=10)
-    entry_weight = tk.Entry(frame, font=("Helvetica", 12))
+    entry_weight = MyEntry(frame)
     entry_weight.pack(pady=5)
 
     label_calories = MyLabel(frame, text="Goal Weight:")
     label_calories.pack(pady=10)
-    entry_goal_weight = tk.Entry(frame, font=("Helvetica", 12))
+    entry_goal_weight = MyEntry(frame)
     entry_goal_weight.pack(pady=5)
 
     # Need to attach this to database to save profile info
