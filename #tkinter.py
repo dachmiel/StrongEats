@@ -352,6 +352,16 @@ def show_meal_plan_settings():
     MealPlanSettings.frame.pack()
 
 
+def show_manage_workout_plan():
+    hide_frames()
+    ManageWorkouts.frame.pack()
+
+
+def show_manage_meal_plan():
+    hide_frames()
+    ManageMeals.frame.pack()
+
+
 # Root Window
 root = tk.Tk()
 root.title("StrongEats")
@@ -423,20 +433,11 @@ class Home:
     title_label.pack(pady=20)
 
     # Home Screen Buttons
-    calorie_tracker_button = MyButton(frame, text="Track Calories", command=show_calorie_tracker)
-    calorie_tracker_button.pack(pady=10)
+    manage_workout_plan_button = MyButton(frame, text="Manage Workout Plan", command=show_manage_workout_plan)
+    manage_workout_plan_button.pack(pady=10)
 
-    new_workout_button = MyButton(frame, text="Add Workout", command=show_add_new_workout)
-    new_workout_button.pack(pady=10)
-
-    add_meal_button = MyButton(frame, text="Add Meal", command=show_meal_page)
-    add_meal_button.pack(pady=10)
-
-    meal_plan_settings_button = MyButton(frame, text="Meal Plan Settings", command=show_meal_plan_settings)
-    meal_plan_settings_button.pack(pady=10)
-
-    workout_plan_settings_button = MyButton(frame, text="Workout Plan Settings", command=show_workout_plan_settings)
-    workout_plan_settings_button.pack(pady=10)
+    manage_meal_plan_button = MyButton(frame, text="Manage Meal Plan", command=show_manage_meal_plan)
+    manage_meal_plan_button.pack(pady=10)
 
     update_profile_info_button = MyButton(frame, text="Update Profile Information", command=show_update_profile_info)
     update_profile_info_button.pack(pady=10)
@@ -452,14 +453,16 @@ class Meal:
     label_meal = MyLabel(frame, text="Welcome to Meal Tracker", font_size=20, bold=True)
     label_meal.pack(pady=20)
     # Add meal-related widgets here (e.g., food selection, calories, etc.)
-    back_button()
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_meal_plan)
+    button.pack(pady=20)
 
 
 class MealHistory:
     frame = tk.Frame()
     label_meal = MyLabel(frame, text="Meal History", font_size=20, bold=True)
     label_meal.pack(pady=20)
-    back_button()
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_meal_plan)
+    button.pack(pady=20)
 
 
 # Calorie Tracker Frame
@@ -489,7 +492,8 @@ class CalorieTracker:
     # Button to calculate calories
     calculate_button = tk.Button(frame, text="Calculate Calories", command=calculate_calories)
     calculate_button.pack(pady=20)
-    back_button()
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_workout_plan)
+    button.pack(pady=20)
 
 
 # Add New Workout Frame
@@ -539,14 +543,16 @@ class AddNewWorkout:
     submit_workout_button = tk.Button(frame, text="Submit", command=save_workout)
     submit_workout_button.pack(pady=10)
     # Add widgets to add new workouts here (e.g., select date, exercises, etc.)
-    back_button()
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_workout_plan)
+    button.pack(pady=20)
 
 
 class WorkoutHistory:
     frame = tk.Frame()
     label_meal = MyLabel(frame, text="Workout History", font_size=20, bold=True)
     label_meal.pack(pady=20)
-    back_button()
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_workout_plan)
+    button.pack(pady=20)
 
 
 # Workout Settings Frame
@@ -582,14 +588,18 @@ class WorkoutPlanSettings:
 
     save_button = tk.Button(frame, text="Save Changes", command=save_workout_settings)
     save_button.pack(pady=10)
-    back_button()
+
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_workout_plan)
+    button.pack(pady=20)
 
 
 class MealPlanSettings:
     frame = tk.Frame()
     label_meal = MyLabel(frame, text="Meal Plan Settings", font_size=20, bold=True)
     label_meal.pack(pady=20)
-    back_button()
+
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_manage_meal_plan)
+    button.pack(pady=20)
 
 
 # Profile Settings Frame
@@ -630,6 +640,41 @@ class ProfileSettings:
     # Need to attach this to database to save profile info
     save_button = tk.Button(frame, text="Save Changes", command=save_profile_settings)
     save_button.pack(pady=10)
+    back_button()
+
+
+class ManageWorkouts:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Manage Workout Plan", font_size=20, bold=True)
+    label_meal.pack(pady=20)
+
+    calorie_tracker_button = MyButton(frame, text="Track Calories", command=show_calorie_tracker)
+    calorie_tracker_button.pack(pady=10)
+
+    new_workout_button = MyButton(frame, text="Add Workout", command=show_add_new_workout)
+    new_workout_button.pack(pady=10)
+
+    workout_history_button = MyButton(frame, text="View Workout History", command=show_workout_history)
+    workout_history_button.pack(pady=10)
+
+    workout_plan_settings_button = MyButton(frame, text="Workout Plan Settings", command=show_workout_plan_settings)
+    workout_plan_settings_button.pack(pady=10)
+    back_button()
+
+
+class ManageMeals:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Manage Meal Plan", font_size=20, bold=True)
+    label_meal.pack(pady=20)
+
+    add_meal_button = MyButton(frame, text="Add Meal", command=show_meal_page)
+    add_meal_button.pack(pady=10)
+
+    meal_history_button = MyButton(frame, text="View Meal History", command=show_meal_history)
+    meal_history_button.pack(pady=10)
+
+    meal_plan_settings_button = MyButton(frame, text="Meal Plan Settings", command=show_meal_plan_settings)
+    meal_plan_settings_button.pack(pady=10)
     back_button()
 
 
