@@ -84,7 +84,7 @@ def login():
 
 
 # create account function for database
-def createAccount():
+def create_account():
     conn2 = sqlite3.connect('login_info.db')
     c2 = conn2.cursor()
 
@@ -99,9 +99,9 @@ def createAccount():
         messagebox.showerror("Cannot Create Account", "This username is already in use")
     else:
         c2.execute("INSERT INTO users VALUES (:username, :password)",
-                {
-                    'username': username,
-                    'password': password})
+                   {
+                       'username': username,
+                       'password': password})
         messagebox.showinfo("Account Creation Successful", "Account Creation Successful")
         # Set username variable
         globalUser = username
@@ -118,8 +118,8 @@ def hide_frames():
 
 
 def back_button():
-    back_button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_home_screen)
-    back_button.pack(pady=10)
+    button = MyButton(root.winfo_children()[-1], text="Previous Page", command=show_home_screen)
+    button.pack(pady=10)
 
 
 def show_login_screen():
@@ -130,11 +130,6 @@ def show_login_screen():
 def show_home_screen():
     hide_frames()
     Home.frame.pack()
-
-
-#def show_settings_screen():
-#    hide_frames()
-    # settings_frame.pack()
 
 
 # Function to open the meal entry screen
@@ -182,11 +177,11 @@ def save_workout():
         messagebox.showerror("Error", "Please select a workout from the drop down")
     else:
         PastWorkouts.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
-                   {
-                       'user': globalUser,
-                       'date': PastWorkouts.entry_date.get(),
-                       'workout': PastWorkouts.workout_var.get() + "::" + PastWorkouts.entry_sets.get() + "::" + PastWorkouts.entry_reps.get() + "::" + PastWorkouts.entry_weight.get()
-                   })
+                                {
+                                    'user': globalUser,
+                                    'date': PastWorkouts.entry_date.get(),
+                                    'workout': PastWorkouts.workout_var.get() + "::" + PastWorkouts.entry_sets.get() + "::" + PastWorkouts.entry_reps.get() + "::" + PastWorkouts.entry_weight.get()
+                                })
         PastWorkouts.conn2.commit()
         PastWorkouts.conn2.close()
 
@@ -210,6 +205,8 @@ root = tk.Tk()
 root.title("StrongEats")
 root.geometry("360x650")
 
+
+# Creates default button style so that you don't have to specify everytime
 class MyButton(tk.Button):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
@@ -221,10 +218,10 @@ class MyButton(tk.Button):
             padx=20,
             pady=10
         )
+
+
 # FRAMES (Simulates new pages)
-# Login Frame
-
-
+# Login Page Frame
 class Login:
     frame = tk.Frame(root)
     login_label = tk.Label(frame, text="Welcome Back", font=("Helvetica", 20, "bold"))
@@ -244,10 +241,11 @@ class Login:
                              relief="flat", padx=20, pady=10)
     login_button.pack(pady=20)
     # Create account button
-    create_account_button = tk.Button(frame, text="Create Account", command=createAccount, font=("Helvetica", 16),
+    create_account_button = tk.Button(frame, text="Create Account", command=create_account, font=("Helvetica", 16),
                                       bg="#007AFF", fg="black",
                                       relief="flat", padx=20, pady=10)
     create_account_button.pack(pady=20)
+
 
 # Home Page Frame
 class Home:
@@ -255,16 +253,23 @@ class Home:
     # Create a label for the home page title
     title_label = tk.Label(frame, text="Your Dashboard", font=("Helvetica", 20, "bold"))
     title_label.pack(pady=20)
+
     # Home Screen Buttons
     start_workout_button = MyButton(frame, text="Start Workout", command=show_workout_page)
     start_workout_button.pack(pady=10)
+
     add_meal_button = MyButton(frame, text="Add Meal", command=show_meal_page)
     add_meal_button.pack(pady=10)
+
     update_past_workout_button = MyButton(frame, text="Update Past Workout", command=show_update_past_workouts)
     update_past_workout_button.pack(pady=10)
+
     workout_settings_button = MyButton(frame, text="Workout Settings", command=show_workout_settings)
+    workout_settings_button.pack(pady=10)
+
     update_profile_info_button = MyButton(frame, text="Update Profile Information", command=show_update_profile_info)
     update_profile_info_button.pack(pady=10)
+
     logout_button = MyButton(frame, text="Logout", command=show_login_screen)
     logout_button.pack(pady=10)
 
@@ -302,6 +307,7 @@ class Workout:
     calories_var = tk.StringVar()
     label_calories_value = tk.Label(frame, textvariable=calories_var)
     label_calories_value.pack(pady=5)
+
     # Button to calculate calories
     calculate_button = tk.Button(frame, text="Calculate Calories", command=calculate_calories)
     calculate_button.pack(pady=20)
@@ -311,6 +317,8 @@ class Workout:
 # Update Workout Info Frame
 class WorkoutSettings:
     frame = tk.Frame()
+    label_meal = tk.Label(frame, text="Workout Settings", font=("Helvetica", 20, "bold"))
+    label_meal.pack(pady=20)
     label_exercise = tk.Label(frame, text="Experience:", font=("Helvetica", 12))
     label_exercise.pack(pady=10)
     exercise_var = tk.StringVar()
@@ -333,9 +341,11 @@ class WorkoutSettings:
     len_dropdown.pack(pady=5)
     len_var.set(list(len_vars.keys())[0])  # Set the default option
     # Need to attach this to database to save profile info
+
     save_button = tk.Button(frame, text="Save Changes")
     save_button.pack(pady=10)
     back_button()
+
 
 # Update Past Workouts Frame
 class PastWorkouts:
@@ -346,12 +356,16 @@ class PastWorkouts:
     # Create labels and widgets for updating past workouts here
     label_past_workout = tk.Label(frame, text="Update Past Workout", font=("Helvetica", 20, "bold"))
     label_past_workout.pack(pady=20)
+
     label_enter_date = tk.Label(frame, text="Enter Date (MM/DD/YYYY):", font=("Helvetica", 12))
     label_enter_date.pack()
+
     entry_date = tk.Entry(frame, font=("Helvetica", 12))
     entry_date.pack(pady=5)
+
     label_select_workout = tk.Label(frame, text="Select a workout", font=("Helvetica", 12))
     label_select_workout.pack(pady=10)
+
     c2.execute("SELECT name FROM exercises")
     workout_options_raw = c2.fetchall()
     workout_options = []
@@ -361,24 +375,26 @@ class PastWorkouts:
     workout_var.set("Select a workout")
     workout_dropdown = tk.OptionMenu(frame, workout_var, *workout_options)
     workout_dropdown.pack()
+
     label_sets = tk.Label(frame, text="Enter Sets Done", font=("Helvetica", 12))
     label_sets.pack(pady=10)
     entry_sets = tk.Entry(frame, font=("Helvetica", 12))
     entry_sets.pack(pady=5)
+
     label_reps = tk.Label(frame, text="Enter Reps Done", font=("Helvetica", 12))
     label_reps.pack(pady=10)
     entry_reps = tk.Entry(frame, font=("Helvetica", 12))
     entry_reps.pack(pady=5)
+
     label_weight = tk.Label(frame, text="Enter Weight Used", font=("Helvetica", 12))
     label_weight.pack(pady=10)
     entry_weight = tk.Entry(frame, font=("Helvetica", 12))
     entry_weight.pack(pady=5)
+
     submit_workout_button = tk.Button(frame, text="Submit", command=save_workout)
     submit_workout_button.pack(pady=10)
     # Add widgets to update past workouts here (e.g., select date, exercises, etc.)
     back_button()
-
-# Update Profile Info Frame
 
 
 class ProfileInfo:
