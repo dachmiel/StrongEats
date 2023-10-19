@@ -109,6 +109,7 @@ def create_account():
                        'password': password})
         messagebox.showinfo("Account Creation Successful", "Account Creation Successful")
         # Set username variable
+        global globalUser
         globalUser = username
         # Open the home page
         show_update_profile_info()
