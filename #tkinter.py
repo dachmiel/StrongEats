@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
+import re
 
 # creates database and cursor
 conn = sqlite3.connect('login_info.db')
@@ -33,6 +34,10 @@ exercise_options = {
     "Weightlifting": 5,
     "Yoga": 4,
     "Other": 6
+}
+sex_vars = {
+    "Male" : "Male",
+    "Female" : "Female"
 }
 
 exp_vars = {
@@ -141,7 +146,7 @@ def show_meal_page():
 # Function to open the workout tracking page
 def show_calorie_tracker():
     hide_frames()
-    Workout.frame.pack()
+    CalorieTracker.frame.pack()
 
 
 def show_workout_settings():
@@ -151,18 +156,25 @@ def show_workout_settings():
 
 # Function to calculate calories based on exercise and duration
 def calculate_calories():
-    exercise = Workout.exercise_var.get()
-    duration = Workout.entry_duration.get()
+    exercise = CalorieTracker.exercise_var.get()
+    duration = CalorieTracker.entry_duration.get()
+    if exercise == "Select an exercise":
+        messagebox.showerror("Error", "Please select an exercise from the drop down")
+        return
+    elif duration == '' or int(duration) < 0:
+        messagebox.showerror("Error", "Please enter a valid duration")
+        return
+
     try:
         duration = float(duration)
         if exercise in exercise_options:
             calorie_burn_rate = exercise_options[exercise]
             calories_burned = duration * calorie_burn_rate
-            Workout.calories_var.set(f"{calories_burned:.2f} calories")
+            CalorieTracker.calories_var.set(f"{calories_burned:.2f} calories")
         else:
-            Workout.calories_var.set("Unknown Exercise")
+            CalorieTracker.calories_var.set("Unknown Exercise")
     except ValueError:
-        Workout.calories_var.set("Invalid Duration")
+        CalorieTracker.calories_var.set("Invalid Duration")
 
 
 # Function to open the past workout update screen
@@ -173,8 +185,56 @@ def show_record_new_workout():
 
 def save_workout():
     workout_to_submit = RecordNewWorkout.workout_var.get()
+    workout_date = RecordNewWorkout.entry_date.get()
+    workout_sets = RecordNewWorkout.entry_sets.get()
+    workout_reps = RecordNewWorkout.entry_reps.get()
+    workout_weight = RecordNewWorkout.entry_weight.get()
+    date_pattern = r"\d{2}/\d{2}/\d{4}"
+
     if workout_to_submit == "Select a workout":
         messagebox.showerror("Error", "Please select a workout from the drop down")
+        return
+
+    if not re.match(date_pattern, workout_date):
+        messagebox.showerror("Error", "Please enter a valid date")
+        return
+
+    if workout_sets == '':
+        messagebox.showerror("Error", "Please enter a valid number of sets")
+        return
+    try:
+        workout_sets = int(workout_sets)
+        if workout_sets <= 0:
+            messagebox.showerror("Error", "Number of sets must be greater than 0")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number of sets")
+        return
+
+    if workout_reps == '':
+        messagebox.showerror("Error", "Please enter a valid number of reps")
+        return
+    try:
+        workout_reps = int(workout_reps)
+        if workout_reps <= 0:
+            messagebox.showerror("Error", "Number of reps must be greater than 0")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number of reps")
+        return
+
+    if workout_weight == '':
+        messagebox.showerror("Error", "Please enter a valid number of weight")
+        return
+    try:
+        workout_weight = float(workout_weight)
+        if workout_weight < 0:
+            messagebox.showerror("Error", "Please enter a valid number of weight")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid number of weight")
+        return
+
     else:
         RecordNewWorkout.c2.execute("INSERT INTO workoutHistory VALUES (:user, :date, :workout)",
                                 {
@@ -197,7 +257,83 @@ def save_workout():
 # Function to open the profile information update screen
 def show_update_profile_info():
     hide_frames()
-    ProfileInfo.frame.pack()
+    ProfileSettings.frame.pack()
+
+
+def save_workout_settings():
+    experience = WorkoutSettings.exercise_var
+    days_per_week = WorkoutSettings.days_var.get()
+    session_length = WorkoutSettings.len_var.get()
+    if experience == "Select an option":
+        messagebox.showerror("Error", "Please select an option")
+        return
+    if days_per_week == "Select an option":
+        messagebox.showerror("Error", "Please select an option")
+        return
+    if session_length == "Select an option":
+        messagebox.showerror("Error", "Please select an option")
+        return
+    else:
+        messagebox.showinfo("Saved Changes", "Changes Saved Successfully")
+
+
+def save_profile_settings():
+    age = ProfileSettings.entry_age.get()
+    sex = ProfileSettings.sex_var.get()
+    height = ProfileSettings.entry_height.get()
+    weight = ProfileSettings.entry_weight.get()
+    goal_weight = ProfileSettings.entry_goal_weight.get()
+    height_pattern = re.compile(r"\d+'\d+")
+    # age
+    if age == '':
+        messagebox.showerror("Error", "Please enter a valid age")
+        return
+    try:
+        age = int(age)
+        if age <= 0:
+            messagebox.showerror("Error", "Please enter a valid age")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid age")
+        return
+    # sex
+    if sex == "Select an option":
+        messagebox.showerror("Error", "Please select a sex")
+        return
+    # height
+    if height == '':
+        messagebox.showerror("Error", "Please enter a valid height")
+        return
+    elif not re.match(height_pattern, height):
+        messagebox.showerror("Error", "Please enter a valid height")
+        return
+    # weight
+    if weight == '':
+        messagebox.showerror("Error", "Please enter a valid weight")
+        return
+    try:
+        weight = float(weight)
+        if weight < 0:
+            messagebox.showerror("Error", "Please enter a valid weight")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid weight")
+        return
+    # goal weight
+    if goal_weight == '':
+        messagebox.showerror("Error", "Please enter a valid goal weight")
+        return
+    try:
+        goal_weight = float(goal_weight)
+        if goal_weight < 0:
+            messagebox.showerror("Error", "Please enter a valid goal weight")
+            return
+    except ValueError:
+        messagebox.showerror("Error", "Please enter a valid goal weight")
+        return
+
+    else:
+        messagebox.showinfo("Saved Changes", "Changes Saved Successfully")
 
 
 # Root Window
@@ -291,7 +427,7 @@ class Meal:
 
 
 # Add Workout Frame
-class Workout:
+class CalorieTracker:
     frame = tk.Frame()
     # Add workout tracking content here
     label_workout = MyLabel(frame, text="Calorie Tracker", font_size=20, bold=True)
@@ -303,7 +439,7 @@ class Workout:
     exercise_dropdown = tk.OptionMenu(frame, exercise_var, *exercise_options.keys())
     exercise_dropdown.config(font=("Helvetica", 12))
     exercise_dropdown.pack(pady=5)
-    exercise_var.set(list(exercise_options.keys())[0])  # Set the default option
+    exercise_var.set("Select an exercise")  # Set the default option
     label_duration = tk.Label(frame, text="Duration (min):")
     label_duration.pack(pady=10)
     entry_duration = tk.Entry(frame)
@@ -317,39 +453,6 @@ class Workout:
     # Button to calculate calories
     calculate_button = tk.Button(frame, text="Calculate Calories", command=calculate_calories)
     calculate_button.pack(pady=20)
-    back_button()
-
-
-# Update Workout Info Frame
-class WorkoutSettings:
-    frame = tk.Frame()
-    label_meal = MyLabel(frame, text="Workout Settings", font_size=20, bold=True)
-    label_meal.pack(pady=20)
-    label_exercise = MyLabel(frame, text="Experience:")
-    label_exercise.pack(pady=10)
-    exercise_var = tk.StringVar()
-    exercise_dropdown = tk.OptionMenu(frame, exercise_var, *exp_vars.keys())
-    exercise_dropdown.config(font=("Helvetica", 12))
-    exercise_dropdown.pack(pady=5)
-    exercise_var.set(list(exp_vars.keys())[0])  # Set the default option
-    label_days = MyLabel(frame, text="How often do you want to work out:")
-    label_days.pack(pady=10)
-    days_var = tk.StringVar()
-    days_dropdown = tk.OptionMenu(frame, days_var, *days_nums.keys())
-    days_dropdown.config(font=("Helvetica", 12))
-    days_dropdown.pack(pady=5)
-    days_var.set(list(days_nums.keys())[0])  # Set the default option
-    label_len = MyLabel(frame, text="How long do you want to work out for:")
-    label_len.pack(pady=10)
-    len_var = tk.StringVar()
-    len_dropdown = tk.OptionMenu(frame, len_var, *len_vars.keys())
-    len_dropdown.config(font=("Helvetica", 12))
-    len_dropdown.pack(pady=5)
-    len_var.set(list(len_vars.keys())[0])  # Set the default option
-    # Need to attach this to database to save profile info
-
-    save_button = tk.Button(frame, text="Save Changes")
-    save_button.pack(pady=10)
     back_button()
 
 
@@ -392,7 +495,7 @@ class RecordNewWorkout:
     entry_reps = tk.Entry(frame, font=("Helvetica", 12))
     entry_reps.pack(pady=5)
 
-    label_weight = MyLabel(frame, text="Enter Weight Used")
+    label_weight = MyLabel(frame, text="Enter Weight Used (lbs)")
     label_weight.pack(pady=10)
     entry_weight = tk.Entry(frame, font=("Helvetica", 12))
     entry_weight.pack(pady=5)
@@ -403,28 +506,78 @@ class RecordNewWorkout:
     back_button()
 
 
-class ProfileInfo:
+# Update Workout Settings Frame
+class WorkoutSettings:
+    frame = tk.Frame()
+    label_meal = MyLabel(frame, text="Workout Settings", font_size=20, bold=True)
+    label_meal.pack(pady=20)
+
+    label_exercise = MyLabel(frame, text="Experience:")
+    label_exercise.pack(pady=10)
+    exercise_var = tk.StringVar()
+    exercise_dropdown = tk.OptionMenu(frame, exercise_var, *exp_vars.keys())
+    exercise_dropdown.config(font=("Helvetica", 12))
+    exercise_dropdown.pack(pady=5)
+    exercise_var.set("Select an option")  # Set the default option
+
+    label_days = MyLabel(frame, text="How many days per week do you want to work out for:")
+    label_days.pack(pady=10)
+    days_var = tk.StringVar()
+    days_dropdown = tk.OptionMenu(frame, days_var, *days_nums.keys())
+    days_dropdown.config(font=("Helvetica", 12))
+    days_dropdown.pack(pady=5)
+    days_var.set("Select an option")  # Set the default option
+
+    label_len = MyLabel(frame, text="How long do you want to work out for:")
+    label_len.pack(pady=10)
+    len_var = tk.StringVar()
+    len_dropdown = tk.OptionMenu(frame, len_var, *len_vars.keys())
+    len_dropdown.config(font=("Helvetica", 12))
+    len_dropdown.pack(pady=5)
+    len_var.set("Select an option")  # Set the default option
+    # Need to attach this to database to save profile info
+
+    save_button = tk.Button(frame, text="Save Changes", command=save_workout_settings)
+    save_button.pack(pady=10)
+    back_button()
+
+
+class ProfileSettings:
     frame = tk.Frame()
     # Create labels and widgets for updating profile information here
     label_profile = MyLabel(frame, text="Update Profile Information", font_size=20, bold=True)
     label_profile.pack(pady=20)
     # dropdown menus for info
+    label_age = MyLabel(frame, text="Age:")
+    label_age.pack(pady=10)
+    entry_age = tk.Entry(frame, font=("Helvetica", 12))
+    entry_age.pack(pady=5)
+
+    label_height = MyLabel(frame, text="Sex:")
+    label_height.pack(pady=10)
+    sex_var = tk.StringVar()
+    sex_dropdown = tk.OptionMenu(frame, sex_var, *sex_vars.keys())
+    sex_dropdown.config(font=("Helvetica", 12))
+    sex_dropdown.pack(pady=5)
+    sex_var.set("Select an option")  # Set the default option
+
     label_height = MyLabel(frame, text="Height:")
     label_height.pack(pady=10)
-    exercise_var = tk.StringVar()
     entry_height = tk.Entry(frame, font=("Helvetica", 12))
     entry_height.pack(pady=5)
+
     label_weight = MyLabel(frame, text="Weight:")
     label_weight.pack(pady=10)
     entry_weight = tk.Entry(frame, font=("Helvetica", 12))
     entry_weight.pack(pady=5)
+
     label_calories = MyLabel(frame, text="Goal Weight:")
     label_calories.pack(pady=10)
-    calories_var = tk.StringVar()
-    entry_calories_value = tk.Entry(frame, font=("Helvetica", 12))
-    entry_calories_value.pack(pady=5)
+    entry_goal_weight = tk.Entry(frame, font=("Helvetica", 12))
+    entry_goal_weight.pack(pady=5)
+
     # Need to attach this to database to save profile info
-    save_button = tk.Button(frame, text="Save Changes")
+    save_button = tk.Button(frame, text="Save Changes", command=save_profile_settings)
     save_button.pack(pady=10)
     back_button()
 
