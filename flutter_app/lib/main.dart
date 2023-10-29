@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Strong Eats',
-      theme: ThemeData.dark(),
-      home: const MyHomePage(title: 'Strong Eats Home Page'),
+      home: LoginPage(),
+      // home: const MyHomePage(title: 'Home Page'),
     );
   }
 }
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Colors.grey,
+        backgroundColor: const Color.fromARGB(255, 91, 89, 89),
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
