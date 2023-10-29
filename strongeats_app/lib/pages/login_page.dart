@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:strongeats/components/square_tile.dart';
 
 import 'forgot_pw_page.dart';
 
@@ -19,10 +20,21 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   Future signIn() async {
+    // loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
+    // pop the loading circle
+    Navigator.of(context).pop();
   }
 
   @override
@@ -42,11 +54,11 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.phone_android,
-                  size: 100,
+                Image.asset(
+                  'lib/assets/barbell_trans.png',
+                  height: 150,
                 ),
-                const SizedBox(height: 25),
+                // const SizedBox(height: 50),
                 // Hello again!
                 Text(
                   'Hello Again!',
@@ -147,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Center(
                         child: Text(
@@ -164,6 +176,54 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
+
+                // or continue with
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 50),
+
+                // google and apple sign in
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    // google button
+                    SquareTile(imagePath: 'lib/assets/google.png'),
+
+                    const SizedBox(
+                      width: 25,
+                    ),
+
+                    // apple button
+                    SquareTile(imagePath: 'lib/assets/apple.png')
+                  ],
+                ),
+
+                const SizedBox(height: 50),
 
                 // not a member? register now
                 Row(
