@@ -201,12 +201,12 @@ class _LoginPageState extends State<LoginPage> {
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: Colors.blueAccent,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Center(
                         child: Text(
-                          'Sign In',
+                          'Log In',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
