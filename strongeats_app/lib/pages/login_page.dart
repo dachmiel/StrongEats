@@ -19,8 +19,9 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // sign user in method
   Future signIn() async {
-    // loading circle
+    // show loading circle
     showDialog(
       context: context,
       builder: (context) {
@@ -28,13 +29,54 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    // try sign in
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // pop the loading circle
+      Navigator.of(context).pop();
+    } on FirebaseAuthException catch (e) {
+      // pop the loading circle
+      Navigator.of(context).pop();
 
-    // pop the loading circle
-    Navigator.of(context).pop();
+      // WRONG EMAIL
+      if (e.code == 'user-not-found') {
+        wrongEmailMessage();
+        print('No user found for that email.');
+      }
+
+      // WRONG PASSWORD
+      else if (e.code == 'wrong-password') {
+        wrongPasswordMessage();
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
+  // wrong email message popup
+  void wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('No user found for that email'),
+        );
+      },
+    );
+  }
+
+  // wrong password message popup
+  void wrongPasswordMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect Password'),
+        );
+      },
+    );
   }
 
   @override
