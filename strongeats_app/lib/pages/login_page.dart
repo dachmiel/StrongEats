@@ -104,14 +104,14 @@ class _LoginPageState extends State<LoginPage> {
                 // Hello again!
                 Text(
                   'Hello Again!',
-                  style: GoogleFonts.bebasNeue(
+                  style: GoogleFonts.inter(
                     fontSize: 52,
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   'Ready to stay fit?',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                   ),
                 ),
