@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final _formfield = GlobalKey<FormState>();
   bool passToggle = true;
+  bool invalidEmailPasswordVisible = false;
 
   // sign user in method
   Future signIn() async {
@@ -47,7 +48,11 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
 
         // errorMessage();
-        return "Invalid email or password";
+        // return "Invalid email or password";
+        setState(() {
+          // Show the error message
+          invalidEmailPasswordVisible = true;
+        });
 
         // // WRONG EMAIL
         // if (e.code == 'user-not-found') {
@@ -164,8 +169,16 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (text) {
                         bool emailValid = EmailValidator.validate(text!);
                         if (text.isEmpty) {
+                          setState(() {
+                            // Show the error message
+                            invalidEmailPasswordVisible = false;
+                          });
                           return "Enter email";
                         } else if (!emailValid) {
+                          setState(() {
+                            // Show the error message
+                            invalidEmailPasswordVisible = false;
+                          });
                           return "Enter valid email";
                         }
                         return null;
@@ -207,6 +220,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       validator: (text) {
                         if (text!.isEmpty) {
+                          setState(() {
+                            // Show the error message
+                            invalidEmailPasswordVisible = false;
+                          });
                           return "Enter password";
                         }
                         return null;
@@ -215,6 +232,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   const SizedBox(height: 10),
+
+                  Visibility(
+                    visible: invalidEmailPasswordVisible,
+                    child: Text(
+                      'Invalid email or password',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.red[
+                            700], // You can change the color to your preference
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
