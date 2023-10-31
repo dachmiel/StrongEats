@@ -25,15 +25,16 @@ class _LoginPageState extends State<LoginPage> {
   // sign user in method
   Future signIn() async {
     // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
 
     // try sign in
     if (_formfield.currentState!.validate()) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        },
+      );
+
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
@@ -46,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
 
         // errorMessage();
+        return "Invalid email or password";
 
         // // WRONG EMAIL
         // if (e.code == 'user-not-found') {
@@ -179,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: passToggle,
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -203,6 +205,12 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Enter password";
+                        }
+                        return null;
+                      },
                     ),
                   ),
 
