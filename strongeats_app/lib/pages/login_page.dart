@@ -45,68 +45,16 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
       } on FirebaseAuthException catch (e) {
         // pop the loading circle
+        print(e);
         Navigator.of(context).pop();
 
-        // errorMessage();
-        // return "Invalid email or password";
         setState(() {
           // Show the error message
           invalidEmailPasswordVisible = true;
         });
-
-        // // WRONG EMAIL
-        // if (e.code == 'user-not-found') {
-        //   wrongEmailMessage();
-        //   // print('No user found for that email.');
-        // }
-
-        // // WRONG PASSWORD
-        // else if (e.code == 'wrong-password') {
-        //   wrongPasswordMessage();
-        //   // print('Wrong password provided for that user.');
-        // }
       }
     }
   }
-
-  // generic error message
-  void errorMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Invalid email or password',
-            style: TextStyle(fontSize: 16),
-          ),
-        );
-      },
-    );
-  }
-
-  // // wrong email message popup
-  // void wrongEmailMessage() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return const AlertDialog(
-  //         title: Text('No user found for that email'),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // // wrong password message popup
-  // void wrongPasswordMessage() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return const AlertDialog(
-  //         title: Text('Incorrect Password'),
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   void dispose() {
@@ -179,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                             // Show the error message
                             invalidEmailPasswordVisible = false;
                           });
-                          return "Enter valid email";
+                          return "Enter a valid email";
                         }
                         return null;
                       },
@@ -285,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.blueAccent,
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Center(
