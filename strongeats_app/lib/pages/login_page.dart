@@ -33,30 +33,32 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     // try sign in
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      // pop the loading circle
-      Navigator.of(context).pop();
-    } on FirebaseAuthException catch (e) {
-      // pop the loading circle
-      Navigator.of(context).pop();
+    if (_formfield.currentState!.validate()) {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        // pop the loading circle
+        Navigator.of(context).pop();
+      } on FirebaseAuthException catch (e) {
+        // pop the loading circle
+        Navigator.of(context).pop();
 
-      // errorMessage();
+        // errorMessage();
 
-      // // WRONG EMAIL
-      // if (e.code == 'user-not-found') {
-      //   wrongEmailMessage();
-      //   // print('No user found for that email.');
-      // }
+        // // WRONG EMAIL
+        // if (e.code == 'user-not-found') {
+        //   wrongEmailMessage();
+        //   // print('No user found for that email.');
+        // }
 
-      // // WRONG PASSWORD
-      // else if (e.code == 'wrong-password') {
-      //   wrongPasswordMessage();
-      //   // print('Wrong password provided for that user.');
-      // }
+        // // WRONG PASSWORD
+        // else if (e.code == 'wrong-password') {
+        //   wrongPasswordMessage();
+        //   // print('Wrong password provided for that user.');
+        // }
+      }
     }
   }
 
@@ -145,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -157,14 +159,14 @@ class _LoginPageState extends State<LoginPage> {
                         fillColor: Colors.grey[200],
                         filled: true,
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
+                      validator: (text) {
+                        bool emailValid = EmailValidator.validate(text!);
+                        if (text.isEmpty) {
                           return "Enter email";
-                        }
-                        bool emailValid = EmailValidator.validate(value);
-                        if (!emailValid) {
+                        } else if (!emailValid) {
                           return "Enter valid email";
                         }
+                        return null;
                       },
                     ),
                   ),
@@ -315,7 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Not a member?',
+                        "Don't have an account?",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -323,7 +325,7 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: widget.showRegisterPage,
                         child: Text(
-                          ' Register Now',
+                          ' Register now',
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
