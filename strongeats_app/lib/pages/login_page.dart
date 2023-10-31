@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   // Hello again!
                   Text(
                     'Hello Again!',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.bebasNeue(
                       fontSize: 52,
                     ),
                   ),

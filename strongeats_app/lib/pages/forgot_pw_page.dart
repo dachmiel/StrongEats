@@ -50,14 +50,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         elevation: 0,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Text(
-              'Enter your email and we will send you a password reset link',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
+            child: Container(
+              margin:
+                  EdgeInsets.only(top: 30.0), // Adjust the top margin as needed
+              child: Text(
+                'Enter the email associated with your account:',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20),
+              ),
             ),
           ),
 
@@ -85,10 +89,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
           SizedBox(height: 10),
 
-          MaterialButton(
-            onPressed: passwordReset,
-            child: Text('Reset Password'),
-            color: Colors.white,
+          GestureDetector(
+            onTap: passwordReset,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Reset Password',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
           ),
         ],
       ),
