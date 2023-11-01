@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formfield = GlobalKey<FormState>();
   bool passToggle = true;
   bool invalidEmailPasswordVisible = false;
+  bool isFocused = false;
 
   // sign user in method
   Future signIn() async {
@@ -103,9 +104,14 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
                       decoration: InputDecoration(
-                        labelText: "Email",
+                        hintText: isFocused ? null : 'Email',
+                        labelText: isFocused ? 'Email' : null,
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
@@ -120,9 +126,16 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        hintText: 'Email',
                         fillColor: Colors.black,
                         filled: true,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          isFocused = true;
+                        });
+                      },
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                       validator: (text) {
                         bool emailValid = EmailValidator.validate(text!);
@@ -290,9 +303,11 @@ class _LoginPageState extends State<LoginPage> {
                     children: const [
                       // apple button
                       SquareTile(
+                        text: 'Apple',
                         imagePath: 'lib/assets/apple.png',
                         boxColor: Colors.white,
                         borderColor: Colors.white,
+                        textColor: Colors.black,
                       ),
 
                       const SizedBox(
@@ -301,14 +316,16 @@ class _LoginPageState extends State<LoginPage> {
 
                       // google button
                       SquareTile(
+                        text: 'Google',
                         imagePath: 'lib/assets/google.png',
                         boxColor: Colors.black,
                         borderColor: Colors.white,
+                        textColor: Colors.white,
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
 
                   // not a member? register now
                   Row(
