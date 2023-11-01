@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:strongeats/components/myButton.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -260,28 +261,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   const SizedBox(height: 10),
 
+                  // sign up button
                   // sign in button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: GestureDetector(
+                    child: MyButton(
                       onTap: signUp,
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
+                      text: "Sign Up",
                     ),
                   ),
                   const SizedBox(height: 25),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:strongeats/components/myButton.dart';
 import 'package:strongeats/components/square_tile.dart';
 
 import 'forgot_pw_page.dart';
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -85,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     'Hello Again!',
                     style: GoogleFonts.bebasNeue(
                       fontSize: 52,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -92,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     'Ready to stay fit?',
                     style: GoogleFonts.inter(
                       fontSize: 18,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 50),
@@ -102,16 +105,23 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
+                        labelText: "Email",
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         hintText: 'Email',
-                        fillColor: Colors.grey[200],
+                        fillColor: Colors.black,
                         filled: true,
                       ),
                       validator: (text) {
@@ -143,11 +153,17 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                            width: 2,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         hintText: 'Password',
@@ -193,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 5),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -223,30 +239,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
-                  // sign in button
+                  // log in button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: GestureDetector(
+                    child: MyButton(
                       onTap: signIn,
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Log In',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
+                      text: "Log In",
                     ),
                   ),
                   const SizedBox(height: 25),
@@ -265,8 +265,11 @@ class _LoginPageState extends State<LoginPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: Colors.grey[700]),
+                            'Or',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -279,25 +282,33 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
-                  // google and apple sign in
-                  Row(
+                  // apple and google sign in
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      // google button
-                      SquareTile(imagePath: 'lib/assets/google.png'),
-
-                      const SizedBox(
-                        width: 25,
+                      // apple button
+                      SquareTile(
+                        imagePath: 'lib/assets/apple.png',
+                        boxColor: Colors.white,
+                        borderColor: Colors.white,
                       ),
 
-                      // apple button
-                      SquareTile(imagePath: 'lib/assets/apple.png')
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      // google button
+                      SquareTile(
+                        imagePath: 'lib/assets/google.png',
+                        boxColor: Colors.black,
+                        borderColor: Colors.white,
+                      ),
                     ],
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
 
                   // not a member? register now
                   Row(
@@ -306,6 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Don't have an account?",
                         style: TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
