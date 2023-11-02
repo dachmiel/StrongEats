@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -95,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     'Hello There!',
                     style: GoogleFonts.bebasNeue(
+                      color: Colors.white,
                       fontSize: 52,
                     ),
                   ),
@@ -102,6 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const Text(
                     'Register below with your details!',
                     style: TextStyle(
+                      color: Colors.white,
                       fontSize: 18,
                     ),
                   ),
@@ -279,6 +281,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Text(
                         'I am a member!',
                         style: TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

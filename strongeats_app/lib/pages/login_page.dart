@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:strongeats/components/myButton.dart';
 import 'package:strongeats/components/square_tile.dart';
+import 'package:strongeats/services/auth_service.dart';
 
 import 'forgot_pw_page.dart';
 
@@ -107,33 +108,31 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
                       decoration: InputDecoration(
-                        hintText: isFocused ? null : 'Email',
-                        labelText: isFocused ? 'Email' : null,
-                        hintStyle: TextStyle(
+                        hintText: 'Email',
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
                           color: Colors.white,
+                        ),
+                        hintStyle: TextStyle(
+                          color: Colors.black,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.grey,
+                            color: Color(0xFF757575),
                             width: 1,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.blue,
                             width: 2,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         fillColor: Colors.black,
                         filled: true,
                       ),
-                      onTap: () {
-                        setState(() {
-                          isFocused = true;
-                        });
-                      },
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -300,7 +299,7 @@ class _LoginPageState extends State<LoginPage> {
                   // apple and google sign in
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       // apple button
                       SquareTile(
                         text: 'Apple',
@@ -308,6 +307,7 @@ class _LoginPageState extends State<LoginPage> {
                         boxColor: Colors.white,
                         borderColor: Colors.white,
                         textColor: Colors.black,
+                        onTap: () {},
                       ),
 
                       const SizedBox(
@@ -321,6 +321,7 @@ class _LoginPageState extends State<LoginPage> {
                         boxColor: Colors.black,
                         borderColor: Colors.white,
                         textColor: Colors.white,
+                        onTap: () => AuthService().signInWithGoogle(),
                       ),
                     ],
                   ),
