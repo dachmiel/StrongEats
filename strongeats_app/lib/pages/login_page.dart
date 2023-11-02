@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:strongeats/components/myButton.dart';
+import 'package:strongeats/components/loginTextField.dart';
 import 'package:strongeats/components/square_tile.dart';
 import 'package:strongeats/services/auth_service.dart';
 
@@ -24,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formfield = GlobalKey<FormState>();
   bool passToggle = true;
   bool invalidEmailPasswordVisible = false;
-  bool isFocused = false;
 
   // sign user in method
   Future signIn() async {
@@ -104,51 +104,15 @@ class _LoginPageState extends State<LoginPage> {
                   // email textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
+                    child: LoginTextField(
+                      obscureText: false,
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF757575),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.blue,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        fillColor: Colors.black,
-                        filled: true,
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      text: 'Email',
                       validator: (text) {
                         bool emailValid = EmailValidator.validate(text!);
                         if (text.isEmpty) {
-                          setState(() {
-                            // Show the error message
-                            invalidEmailPasswordVisible = false;
-                          });
                           return "Enter email";
                         } else if (!emailValid) {
-                          setState(() {
-                            // Show the error message
-                            invalidEmailPasswordVisible = false;
-                          });
                           return "Enter a valid email";
                         }
                         return null;
@@ -160,50 +124,26 @@ class _LoginPageState extends State<LoginPage> {
                   // password textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
+                    child: LoginTextField(
                       obscureText: passToggle,
                       controller: _passwordController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.blue,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Password',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              passToggle = !passToggle;
-                            });
-                          },
-                          child: Icon(
-                            passToggle
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        ),
-                      ),
+                      text: 'Password',
                       validator: (text) {
                         if (text!.isEmpty) {
-                          setState(() {
-                            // Show the error message
-                            invalidEmailPasswordVisible = false;
-                          });
                           return "Enter password";
                         }
                         return null;
                       },
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          setState(() {
+                            passToggle = !passToggle;
+                          });
+                        },
+                        child: Icon(
+                          passToggle ? Icons.visibility_off : Icons.visibility,
+                        ),
+                      ),
                     ),
                   ),
 

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:strongeats/components/myButton.dart';
+import 'package:strongeats/components/registerTextField.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -115,17 +116,43 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextFormField(
                       controller: _firstNameController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF757575),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Color(0xFF757575),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFFD32F2F),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFFD32F2F),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         hintText: 'First Name',
-                        fillColor: Colors.grey[200],
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        fillColor: Colors.black,
                         filled: true,
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                       validator: (text) {
                         if (text!.isEmpty) {
@@ -141,27 +168,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   // last name textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
+                    child: RegisterTextField(
                       controller: _lastNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Last Name',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                      ),
+                      text: "Last name",
                       validator: (text) {
                         if (text!.isEmpty) {
                           return "Enter last name";
                         }
                         return null;
                       },
+                      obscureText: false,
                     ),
                   ),
 
@@ -170,21 +186,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   // email textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
+                    child: RegisterTextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Email',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                      ),
+                      text: 'Email',
                       validator: (text) {
                         bool emailValid = EmailValidator.validate(text!);
                         if (text.isEmpty) {
@@ -194,6 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         }
                         return null;
                       },
+                      obscureText: false,
                     ),
                   ),
 
@@ -202,22 +207,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   // password textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
-                      obscureText: true,
+                    child: RegisterTextField(
                       controller: _passwordController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Password',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                      ),
+                      text: 'Password',
                       validator: (text) {
                         if (text!.isEmpty) {
                           return "Enter password";
@@ -226,6 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         }
                         return null;
                       },
+                      obscureText: true,
                     ),
                   ),
 
@@ -234,22 +227,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   // confirm password textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
-                      obscureText: true,
+                    child: RegisterTextField(
                       controller: _confirmpasswordController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        hintText: 'Confirm Password',
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                      ),
+                      text: 'Confirm Password',
                       validator: (text) {
                         if (text!.isEmpty) {
                           return "Enter password";
@@ -258,6 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         }
                         return null;
                       },
+                      obscureText: true,
                     ),
                   ),
 
