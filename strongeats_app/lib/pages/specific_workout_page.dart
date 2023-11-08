@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/exercise_tile.dart';
 import 'package:strongeats/data/workout_data.dart';
 
@@ -34,23 +35,43 @@ class _WorkoutPageState extends State<WorkoutPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // exercise name
-            TextField(
+            CustomTextField(
               controller: _newExerciseNameController,
+              text: 'Exercise Name',
+              obscureText: false,
+              fillColor: Colors.white,
+              borderColor: Colors.grey,
+              textColor: Colors.black,
             ),
 
             // weight
-            TextField(
+            CustomTextField(
               controller: _weightController,
+              text: 'Weight (lbs)',
+              obscureText: false,
+              fillColor: Colors.white,
+              borderColor: Colors.grey,
+              textColor: Colors.black,
             ),
 
             // reps
-            TextField(
+            CustomTextField(
               controller: _repsController,
+              text: 'Reps',
+              obscureText: false,
+              fillColor: Colors.white,
+              borderColor: Colors.grey,
+              textColor: Colors.black,
             ),
 
             // sets
-            TextField(
+            CustomTextField(
               controller: _setsController,
+              text: 'Sets',
+              obscureText: false,
+              fillColor: Colors.white,
+              borderColor: Colors.grey,
+              textColor: Colors.black,
             )
           ],
         ),

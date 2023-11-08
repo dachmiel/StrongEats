@@ -21,7 +21,6 @@ class ExerciseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[200],
       child: ListTile(
         title: Text(
           exerciseName,

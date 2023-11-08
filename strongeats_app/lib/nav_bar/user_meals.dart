@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strongeats/data/meal_data.dart';
-import '../pages/meal_page.dart';
+import '../pages/specific_meal_page.dart';
 
 class UserMeals extends StatefulWidget {
   @override
@@ -88,20 +88,23 @@ class _UserMealsState extends State<UserMeals> {
             child: Column(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: value.getMealList().length,
-                    itemBuilder: (context, index) => ListTile(
-                      title: Text(
-                        value.getMealList()[index].name,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: ListView.builder(
+                      itemCount: value.getMealList().length,
+                      itemBuilder: (context, index) => ListTile(
+                        title: Text(
+                          value.getMealList()[index].name,
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
-                        onPressed: () =>
-                            goToMealPage(value.getMealList()[index].name),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white,
+                          ),
+                          onPressed: () =>
+                              goToMealPage(value.getMealList()[index].name),
+                        ),
                       ),
                     ),
                   ),
