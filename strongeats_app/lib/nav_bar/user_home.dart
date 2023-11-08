@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class UserMeals extends StatelessWidget {
-  final String name = 'Meal Tracker';
-
+class UserHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -11,7 +9,7 @@ class UserMeals extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Meal Page',
+                'Home Page',
                 style: TextStyle(color: Colors.white),
               ),
             ],
@@ -20,4 +18,4 @@ class UserMeals extends StatelessWidget {
       ),
     );
   }
-}R
+}

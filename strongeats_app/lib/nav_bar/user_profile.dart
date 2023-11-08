@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class UserProfile extends StatelessWidget {
-  final String name = 'Profile';
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

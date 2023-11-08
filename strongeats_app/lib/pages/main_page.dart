@@ -1,18 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:strongeats/nav_bar/home.dart';
-import 'package:strongeats/nav_bar/meals.dart';
-import 'package:strongeats/nav_bar/profile.dart';
-import 'package:strongeats/nav_bar/workouts.dart';
+import 'package:strongeats/nav_bar/user_home.dart';
+import 'package:strongeats/nav_bar/user_meals.dart';
+import 'package:strongeats/nav_bar/user_profile.dart';
+import 'package:strongeats/nav_bar/user_workouts.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   final user = FirebaseAuth.instance.currentUser!;
   void _nagivateBottomBar(int index) {
@@ -40,27 +40,28 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            _pageTitles[_selectedIndex],
-            style: TextStyle(fontSize: 20),
+        backgroundColor: Colors.black,
+        title: Text(
+          _pageTitles[_selectedIndex],
+          style: TextStyle(fontSize: 20),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: Icon(Icons.logout),
           ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-              },
-              child: Icon(Icons.logout),
-            ),
-          ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(1),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey[600],
-            ),
-          )),
+        ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(
+            height: 1,
+            thickness: 1,
+            color: Colors.grey[600],
+          ),
+        ),
+      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey[900],

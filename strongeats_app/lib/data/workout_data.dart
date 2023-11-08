@@ -21,6 +21,23 @@ class WorkoutData extends ChangeNotifier {
           sets: "3",
         ),
       ],
+    ),
+    Workout(
+      name: "Day 2",
+      exercises: [
+        Exercise(
+          name: "Deadlift",
+          weight: "85",
+          reps: "12",
+          sets: "3",
+        ),
+        Exercise(
+          name: "Bicep Curls",
+          weight: "135",
+          reps: "12",
+          sets: "3",
+        ),
+      ],
     )
   ];
 
