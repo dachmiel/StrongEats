@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:strongeats/auth/main_page.dart';
+import 'package:provider/provider.dart';
+import 'package:strongeats/auth/default_page.dart';
+import 'package:strongeats/data/meal_data.dart';
+import 'package:strongeats/data/workout_data.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,10 +21,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Strong Eats',
-      home: MainPage(),
-      // home: const MyHomePage(title: 'Home Page'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<WorkoutData>(create: (context) => WorkoutData()),
+        ChangeNotifierProvider<MealData>(create: (context) => MealData()),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Strong Eats',
+        home: DefaultPage(),
+      ),
     );
   }
 }

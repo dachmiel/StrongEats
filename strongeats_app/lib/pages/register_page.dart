@@ -108,52 +108,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       fontSize: 18,
                     ),
                   ),
+
                   const SizedBox(height: 50),
 
                   // first name textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextFormField(
+                    child: RegisterTextField(
+                      obscureText: false,
                       controller: _firstNameController,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF757575),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF757575),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFD32F2F),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFD32F2F),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        hintText: 'First Name',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
-                        fillColor: Colors.black,
-                        filled: true,
-                      ),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      text: "First name",
                       validator: (text) {
                         if (text!.isEmpty) {
                           return "Enter first name";
@@ -242,10 +206,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
                   // sign up button
-                  // sign in button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: MyButton(
