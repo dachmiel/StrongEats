@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:strongeats/components/exercise_tile.dart';
 import 'package:strongeats/data/workout_data.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -11,6 +12,94 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
+  // check box was tapped
+  void onCheckBoxChanged(String workoutName, String exerciseName) {
+    Provider.of<WorkoutData>(context, listen: false)
+        .checkOffExercise(workoutName, exerciseName);
+  }
+
+  // text controlleres
+  final _newExerciseNameController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _repsController = TextEditingController();
+  final _setsController = TextEditingController();
+
+  // create a new exercise
+  void createNewExercise() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add a new exercise'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // exercise name
+            TextField(
+              controller: _newExerciseNameController,
+            ),
+
+            // weight
+            TextField(
+              controller: _weightController,
+            ),
+
+            // reps
+            TextField(
+              controller: _repsController,
+            ),
+
+            // sets
+            TextField(
+              controller: _setsController,
+            )
+          ],
+        ),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: save,
+            child: Text('Save'),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: cancel,
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // save exercise
+  void save() {
+    // get exercise name from text controller
+    String newExerciseName = _newExerciseNameController.text;
+    String weight = _weightController.text;
+    String reps = _repsController.text;
+    String sets = _setsController.text;
+    // add exercise to workout
+    Provider.of<WorkoutData>(context, listen: false)
+        .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
+
+    Navigator.pop(context);
+    clear();
+  }
+
+  // cancel
+  void cancel() {
+    Navigator.pop(context);
+    clear();
+  }
+
+  // clear
+  void clear() {
+    _newExerciseNameController.clear();
+    _weightController.clear();
+    _repsController.clear();
+    _setsController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
@@ -19,13 +108,39 @@ class _WorkoutPageState extends State<WorkoutPage> {
           title: Text(widget.workoutName),
           backgroundColor: Colors.black,
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: createNewExercise,
+          child: Icon(Icons.add),
+        ),
         body: ListView.builder(
           itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-          itemBuilder: (context, index) => ListTile(
-            title: Text(value
+          itemBuilder: (context, index) => ExerciseTile(
+            exerciseName: value
                 .getRelevantWorkout(widget.workoutName)
                 .exercises[index]
-                .name),
+                .name,
+            weight: value
+                .getRelevantWorkout(widget.workoutName)
+                .exercises[index]
+                .weight,
+            reps: value
+                .getRelevantWorkout(widget.workoutName)
+                .exercises[index]
+                .reps,
+            sets: value
+                .getRelevantWorkout(widget.workoutName)
+                .exercises[index]
+                .sets,
+            isCompleted: value
+                .getRelevantWorkout(widget.workoutName)
+                .exercises[index]
+                .isCompleted,
+            onCheckBoxChanged: (val) => onCheckBoxChanged(
+                widget.workoutName,
+                value
+                    .getRelevantWorkout(widget.workoutName)
+                    .exercises[index]
+                    .name),
           ),
         ),
       ),
