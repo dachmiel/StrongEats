@@ -64,15 +64,14 @@ class WorkoutData extends ChangeNotifier {
 
   // add an exercise to a workout
 
-  void addExercise(String workoutName, String exerciseName, String weight,
-      String reps, String sets) {
+  void addExercise(String workoutName, Exercise exercise) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     relevantWorkout.exercises.add(
       Exercise(
-        name: exerciseName,
-        weight: weight,
-        reps: reps,
-        sets: sets,
+        name: exercise.name,
+        weight: exercise.weight,
+        reps: exercise.reps,
+        sets: exercise.sets,
       ),
     );
 
