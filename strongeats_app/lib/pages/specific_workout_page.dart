@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/exercise_tile.dart';
 import 'package:strongeats/data/workout_data.dart';
+import 'package:strongeats/services/workout_history_db.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -102,6 +103,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
     // add exercise to workout
     Provider.of<WorkoutData>(context, listen: false)
         .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
+    
+    WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExerciseName, sets, reps, weight);
+
 
     Navigator.pop(context);
     clear();
