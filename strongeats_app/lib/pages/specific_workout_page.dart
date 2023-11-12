@@ -5,6 +5,7 @@ import 'package:strongeats/components/exercise_tile.dart';
 import 'package:strongeats/data/workout_data.dart';
 import 'package:strongeats/models/exercise.dart';
 import 'package:strongeats/services/workout_history_db.dart';
+import 'package:strongeats/models/workout_list.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;

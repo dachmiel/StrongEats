@@ -29,7 +29,7 @@ class ExerciseTile extends StatelessWidget {
           children: [
             // weight
             Chip(
-              label: Text(weight + "kg"),
+              label: Text(weight + "lbs"),
             ),
             // reps
             Chip(

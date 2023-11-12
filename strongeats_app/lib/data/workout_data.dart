@@ -1,10 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:strongeats/models/exercise.dart';
-
+import 'package:strongeats/services/workout_history_db.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/workout.dart';
+import 'package:strongeats/models/workout_list.dart';
 
 class WorkoutData extends ChangeNotifier {
-  List<Workout> workoutList = [
+  List<WorkoutStream> workoutList = WorkoutHistoryDB().workouts.listen();
+  /*[
     Workout(
       name: "Day 1",
       exercises: [
@@ -39,14 +43,14 @@ class WorkoutData extends ChangeNotifier {
         ),
       ],
     )
-  ];
+  ];*/
 
   // get the list of workouts
-
-  List<Workout> getWorkoutList() {
-    return workoutList;
+/*
+  List<WorkoutStream> getWorkoutList() {
+    return _WorkoutListState.workouts;
   }
-
+*/
   // get length of a given workout
 
   int numberOfExercisesInWorkout(String workoutName) {
@@ -56,8 +60,13 @@ class WorkoutData extends ChangeNotifier {
 
   // add a workout
 
-  void addWorkout(String name) {
-    workoutList.add(Workout(name: name, exercises: []));
+  void addWorkout(String workoutName){
+    //workoutList.add(Workout(name: name, exercises: []));
+    WorkoutHistoryDB().newWorkout(
+      Workout(
+        name: workoutName,
+        exercises: []
+      ));
 
     notifyListeners();
   }
@@ -94,8 +103,8 @@ class WorkoutData extends ChangeNotifier {
   // return relevant workout object, given workout name
 
   Workout getRelevantWorkout(String workoutName) {
-    Workout relevantWorkout =
-        workoutList.firstWhere((workout) => workout.name == workoutName);
+    Workout relevantWorkout = 
+      workoutList.forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
 
     return relevantWorkout;
   }
