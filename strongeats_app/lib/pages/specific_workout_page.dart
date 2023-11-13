@@ -4,10 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/exercise_tile.dart';
-import 'package:strongeats/data/workout_data.dart';
 import 'package:strongeats/models/exercise.dart';
 import 'package:strongeats/services/workout_history_db.dart';
-import 'package:strongeats/models/workout_list.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -39,10 +37,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final _setsController = TextEditingController();
 
   // check if box was tapped
-  void onCheckBoxChanged(String workoutName, String exerciseName) {
-    Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(workoutName, exerciseName);
-  }
+  //void onCheckBoxChanged(String workoutName, String exerciseName) {
+  //  Provider.of<WorkoutData>(context, listen: false)
+  //      .checkOffExercise(workoutName, exerciseName);
+  //}
 
   // create a new exercise
   void createNewExercise() {
@@ -123,8 +121,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
 
     // add exercise to workout
-    Provider.of<WorkoutData>(context, listen: false)
-        .addExercise(widget.workoutName, newExercise);
+    //Provider.of<WorkoutData>(context, listen: false)
+    //    .addExercise(widget.workoutName, newExercise);
 
     WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExercise);
 
@@ -148,8 +146,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
-      builder: (context, value, child) => Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(widget.workoutName),
           backgroundColor: Colors.black,
@@ -192,7 +189,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
             );
           },
         ),
-      ),
-    );
+      );
   }
 }

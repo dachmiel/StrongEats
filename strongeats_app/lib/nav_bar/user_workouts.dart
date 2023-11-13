@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:strongeats/components/customTextField.dart';
-import 'package:strongeats/components/registerTextField.dart';
-import 'package:strongeats/data/workout_data.dart';
 import '../pages/specific_workout_page.dart';
 import 'package:strongeats/auth/uid.dart';
+import 'package:strongeats/models/workout.dart';
+import 'package:strongeats/services/workout_history_db.dart';
 
 class UserWorkouts extends StatefulWidget {
   @override
@@ -68,7 +67,8 @@ class _UserWorkoutsState extends State<UserWorkouts> {
     // get workout name from text controller
     String newWorkoutName = _newWorkoutNameController.text;
     // add workout to workoutdata list
-    Provider.of<WorkoutData>(context, listen: false).addWorkout(newWorkoutName);
+    // Provider.of<WorkoutData>(context, listen: false).addWorkout(newWorkoutName);\
+    WorkoutHistoryDB().newWorkout(Workout(name: newWorkoutName, exercises: []));
 
     Navigator.pop(context);
     clear();
@@ -87,8 +87,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
-      builder: (context, value, child) => Scaffold(
+    return Scaffold(
         backgroundColor: Colors.black,
         floatingActionButton: FloatingActionButton(
           onPressed: createNewWorkout,
@@ -144,7 +143,6 @@ class _UserWorkoutsState extends State<UserWorkouts> {
             );
           },
         ),
-      ),
-    );
+      );
   }
 }
