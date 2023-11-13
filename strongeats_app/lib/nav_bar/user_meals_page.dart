@@ -119,7 +119,20 @@ class _UserMealsState extends State<UserMeals> {
             return Center(child: CircularProgressIndicator());
           }
           var docs = snapshot.data!.docs;
-          // return Text('${docs.length}');
+
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Create a new meal!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }
+
           return SafeArea(
             child: Center(
               child: Column(

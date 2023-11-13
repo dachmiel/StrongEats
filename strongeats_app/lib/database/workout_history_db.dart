@@ -44,12 +44,18 @@ class WorkoutHistoryDB {
           .doc(workoutName)
           .delete();
 
-      // Optionally, you can delete associated exercises if needed
-      // await workoutHistory.doc(uid).collection('userWorkouts').doc(workoutName).collection('userExercises').get().then((querySnapshot) {
-      //   querySnapshot.docs.forEach((doc) {
-      //     doc.reference.delete();
-      //   });
-      // });
+      // delete associated exercises
+      await workoutHistory
+          .doc(uid)
+          .collection('userWorkouts')
+          .doc(workoutName)
+          .collection('userExercises')
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
     } catch (e) {
       print('Error deleting workout: $e');
     }

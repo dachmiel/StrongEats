@@ -118,6 +118,19 @@ class _UserWorkoutsState extends State<UserWorkouts> {
           // successful connection and data received
           var docs = snapshot.data!.docs;
 
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Create a new workout!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }
+
           return SafeArea(
             child: Center(
               child: Column(

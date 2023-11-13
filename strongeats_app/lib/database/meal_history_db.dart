@@ -62,6 +62,19 @@ class MealHistoryDB {
           .collection('userFoods')
           .doc(foodName)
           .delete();
+
+      // delete associated foods
+      await mealHistory
+          .doc(uid)
+          .collection('userMeals')
+          .doc(mealName)
+          .collection('userFoods')
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
     } catch (e) {
       print('Error deleting food: $e');
     }

@@ -211,13 +211,26 @@ class _MealPageState extends State<MealPage> {
 
           var docs = snapshot.data!.docs;
 
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Add a food to your meal!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }
+
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (context, index) => FoodTile(
               foodName: docs[index]['name'],
               weight: docs[index]['weight'],
-              servings: docs[index]['reps'],
-              calories: docs[index]['sets'],
+              servings: docs[index]['servings'],
+              calories: docs[index]['calories'],
               proteins: docs[index]['proteins'],
               carbs: docs[index]['carbs'],
               fats: docs[index]['fats'],

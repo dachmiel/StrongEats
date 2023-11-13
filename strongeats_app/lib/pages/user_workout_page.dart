@@ -167,6 +167,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
           var docs = snapshot.data!.docs;
 
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Add an exercise to your workout!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }
+
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (context, index) => ExerciseTile(
