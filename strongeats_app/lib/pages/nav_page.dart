@@ -38,9 +38,9 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
         title: Text(
           _pageTitles[_selectedIndex],
           style: TextStyle(fontSize: 20),
