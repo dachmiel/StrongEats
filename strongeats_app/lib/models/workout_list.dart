@@ -34,9 +34,6 @@ List<dynamic> printWorkoutHistory() {
 }
 
 
-
-
-
 /*
 class WorkoutList extends StatefulWidget {
   const WorkoutList({super.key});

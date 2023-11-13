@@ -31,7 +31,6 @@ class WorkoutData extends ChangeNotifier {
 
     WorkoutHistoryDB().newWorkout(Workout(name: workoutName, exercises: []));
 
-    // print("\n\n\n\n\n\n\n\n" + listCreation.printWorkoutHistory() + "\n\n\n\n\n\n\n");
     notifyListeners();
   }
 
@@ -69,7 +68,6 @@ class WorkoutData extends ChangeNotifier {
   Workout getRelevantWorkout(String workoutName) {
     Workout relevantWorkout =
         workoutList.firstWhere((workout) => workout.name == workoutName);
-    //forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
 
     return relevantWorkout;
   }
