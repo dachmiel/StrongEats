@@ -93,7 +93,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[300],
       floatingActionButton: FloatingActionButton(
         onPressed: createNewWorkout,
         child: const Icon(
@@ -122,7 +122,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
                         itemCount: docs.length,
                         itemBuilder: (context, index) => Dismissible(
@@ -135,7 +135,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             decoration: BoxDecoration(
                               color: Colors.red,
-                              border: Border.all(color: Colors.black),
+                              // border: Border.all(color: Colors.black),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Icon(
@@ -147,8 +147,8 @@ class _UserWorkoutsState extends State<UserWorkouts> {
                           ),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.black),
+                              color: Colors.grey[900],
+                              // border: Border.all(color: Colors.black),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             height: 100, // Set the height
@@ -156,15 +156,17 @@ class _UserWorkoutsState extends State<UserWorkouts> {
                             child: Center(
                               child: ListTile(
                                 title: Text(
-                                  docs[index]['name'],
+                                  docs[index]['name'].toString().toUpperCase(),
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 25),
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 onTap: () =>
                                     goToWorkoutPage(docs[index]['name']),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
