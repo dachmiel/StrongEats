@@ -43,6 +43,7 @@ dependencies:
   email_validator: ^2.1.17
   google_sign_in: ^6.1.5
   provider:
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

@@ -10,7 +10,7 @@ class UserHome extends StatelessWidget {
             children: [
               Text(
                 'Home Page',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
             ],
           ),

@@ -10,7 +10,7 @@ class UserProfile extends StatelessWidget {
             children: [
               Text(
                 'Profile Page',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
             ],
           ),

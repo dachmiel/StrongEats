@@ -6,6 +6,7 @@ import '../pages/user_workout_page.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/objects/workout.dart';
 import 'package:strongeats/database/workout_history_db.dart';
+import 'package:intl/intl.dart';
 
 class UserWorkouts extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class UserWorkouts extends StatefulWidget {
 
 class _UserWorkoutsState extends State<UserWorkouts> {
   // text controller
-  final _newWorkoutNameController = TextEditingController();
+  final _workoutDateController = TextEditingController();
   // read this users workouts from database
   final _workoutsStream = FirebaseFirestore.instance
       .collection('workoutHistory')
@@ -28,13 +29,21 @@ class _UserWorkoutsState extends State<UserWorkouts> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create new workout"),
-        content: CustomTextField(
-          controller: _newWorkoutNameController,
-          text: 'Workout name',
-          obscureText: false,
-          borderColor: Colors.grey,
-          fillColor: Colors.white,
-          textColor: Colors.black,
+        content: TextField(
+          controller: _workoutDateController,
+          decoration: InputDecoration(
+            filled: true,
+            labelText: 'Workout Date',
+            prefixIcon: Icon(Icons.calendar_today),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue),
+            ),
+          ),
+          readOnly: true,
+          onTap: () {
+            _selectDate();
+          },
         ),
         actions: [
           // save button
@@ -53,6 +62,22 @@ class _UserWorkoutsState extends State<UserWorkouts> {
     );
   }
 
+  Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (_picked != null) {
+      String formattedDate = DateFormat("MMMM dd, yyyy").format(_picked);
+      setState(() {
+        _workoutDateController.text = formattedDate.toString();
+      });
+    }
+  }
+
   // go to a specific workout page
   void goToWorkoutPage(String workoutName) {
     Navigator.push(
@@ -67,9 +92,9 @@ class _UserWorkoutsState extends State<UserWorkouts> {
   // save workout into database
   void save() {
     // get workout name from text controller
-    String newWorkoutName = _newWorkoutNameController.text;
+    String newWorkoutDate = _workoutDateController.text;
     // add empty workout to database
-    WorkoutHistoryDB().newWorkout(Workout(name: newWorkoutName, exercises: []));
+    WorkoutHistoryDB().newWorkout(Workout(name: newWorkoutDate, exercises: []));
 
     Navigator.pop(context);
     clear();
@@ -87,7 +112,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
 
   // clear
   void clear() {
-    _newWorkoutNameController.clear();
+    _workoutDateController.clear();
   }
 
   // build this users list of workouts based on stored info from database
