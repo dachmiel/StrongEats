@@ -5,14 +5,14 @@ import 'package:strongeats/nav_bar/user_meals.dart';
 import 'package:strongeats/nav_bar/user_profile.dart';
 import 'package:strongeats/nav_bar/user_workouts.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class NavPage extends StatefulWidget {
+  const NavPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<NavPage> createState() => _NavPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _NavPageState extends State<NavPage> {
   int _selectedIndex = 0;
   final user = FirebaseAuth.instance.currentUser!;
   void _nagivateBottomBar(int index) {
@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
         title: Text(
           _pageTitles[_selectedIndex],
           style: TextStyle(fontSize: 20),

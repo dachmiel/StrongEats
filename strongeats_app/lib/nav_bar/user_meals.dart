@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:strongeats/data/meal_data.dart';
-import '../pages/specific_meal_page.dart';
+import 'package:strongeats/auth/uid.dart';
+import 'package:strongeats/custom_classes/customTextField.dart';
+import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
+import 'package:strongeats/objects/meal.dart';
+import 'package:strongeats/database/meal_history_db.dart';
+import '../pages/user_meal_page.dart';
 
 class UserMeals extends StatefulWidget {
   @override
@@ -11,6 +15,13 @@ class UserMeals extends StatefulWidget {
 class _UserMealsState extends State<UserMeals> {
   // text controller
   final _newMealNameController = TextEditingController();
+  final _dateController = TextEditingController();
+  // read this users meals from database
+  final _mealsStream = FirebaseFirestore.instance
+      .collection('mealHistory')
+      .doc(uid)
+      .collection('userMeals')
+      .snapshots();
 
   // create a new meal
   void createNewMeal() {
@@ -18,8 +29,13 @@ class _UserMealsState extends State<UserMeals> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create new meal"),
-        content: TextField(
+        content: CustomTextField(
           controller: _newMealNameController,
+          text: 'Meal name',
+          obscureText: false,
+          borderColor: Colors.grey,
+          fillColor: Colors.white,
+          textColor: Colors.black,
         ),
         actions: [
           // save button
@@ -53,11 +69,19 @@ class _UserMealsState extends State<UserMeals> {
   void save() {
     // get meal name from text controller
     String newMealName = _newMealNameController.text;
+    String date = _dateController.text;
+
     // add meal to mealdata list
-    Provider.of<MealData>(context, listen: false).addMeal(newMealName);
+    // Provider.of<MealData>(context, listen: false).addMeal(newMealName);
+    MealHistoryDB().newMeal(Meal(name: newMealName, foods: []));
 
     Navigator.pop(context);
     clear();
+  }
+
+  // delete
+  void delete(String mealName) {
+    MealHistoryDB().deleteMeal(mealName);
   }
 
   // cancel
@@ -71,48 +95,58 @@ class _UserMealsState extends State<UserMeals> {
     _newMealNameController.clear();
   }
 
+  // build this users list of meals based on info from database
   @override
   Widget build(BuildContext context) {
-    return Consumer<MealData>(
-      builder: (context, value, child) => Scaffold(
-        backgroundColor: Colors.black,
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewMeal,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
+        onPressed: createNewMeal,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: ListView.builder(
-                      itemCount: value.getMealList().length,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(
-                          value.getMealList()[index].name,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                          ),
-                          onPressed: () =>
-                              goToMealPage(value.getMealList()[index].name),
-                        ),
-                      ),
-                    ),
-                  ),
+      ),
+      body: StreamBuilder(
+        stream: _mealsStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Connection error');
+          }
+          // stream is connected but data is not coming yet
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Create a new meal!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
                 ),
-              ],
+              ),
+            );
+          }
+
+          return SafeArea(
+            child: Center(
+              child: Column(
+                children: [
+                  Expanded(
+                      child: MyListTile(
+                          delete: delete,
+                          docs: docs,
+                          goToWorkoutOrMealPage: goToMealPage)),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

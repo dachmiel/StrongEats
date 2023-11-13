@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class UserHome extends StatelessWidget {
   final _formfield = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-   /* return Center(
+    /* return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -16,7 +15,7 @@ class UserHome extends StatelessWidget {
       ),
     );
   }*/
-  return Scaffold(
+    return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
@@ -37,8 +36,6 @@ class UserHome extends StatelessWidget {
                     style: GoogleFonts.bebasNeue(
                       fontSize: 52,
                       color: Colors.white,
-                      
-
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -50,6 +47,12 @@ class UserHome extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-              ],),),),),),);
-}
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -7,6 +7,7 @@ class SquareTile extends StatelessWidget {
   final Color borderColor;
   final Color textColor;
   final Function()? onTap;
+
   const SquareTile({
     super.key,
     required this.text,

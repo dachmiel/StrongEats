@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
-import 'package:strongeats/models/workout.dart';
+import 'package:strongeats/objects/workout.dart';
 import 'package:strongeats/auth/uid.dart';
-import 'package:strongeats/models/exercise.dart';
 
 // collection reference
 final CollectionReference workoutHistory = FirebaseFirestore.instance

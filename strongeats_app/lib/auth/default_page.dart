@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/auth_page.dart';
-import '../pages/main_page.dart';
+import '../pages/nav_page.dart';
 
 class DefaultPage extends StatelessWidget {
   const DefaultPage({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class DefaultPage extends StatelessWidget {
           builder: (context, snapshot) {
             // user is logged in
             if (snapshot.hasData) {
-              return MainPage();
+              return NavPage();
             }
             // user is NOT logged in
             else {

@@ -3,8 +3,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:strongeats/components/myButton.dart';
-import 'package:strongeats/components/registerTextField.dart';
+import 'package:strongeats/custom_classes/myButton.dart';
+import 'package:strongeats/custom_classes/registerTextField.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;

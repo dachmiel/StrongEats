@@ -66,7 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '621979015912',
     projectId: 'strongeats-1bb50',
     storageBucket: 'strongeats-1bb50.appspot.com',
-    iosClientId: '621979015912-iaar7dajgps62arssdvtov5slfl90ipf.apps.googleusercontent.com',
+    iosClientId:
+        '621979015912-iaar7dajgps62arssdvtov5slfl90ipf.apps.googleusercontent.com',
     iosBundleId: 'com.strongeats.strongeats',
   );
 
@@ -76,7 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '621979015912',
     projectId: 'strongeats-1bb50',
     storageBucket: 'strongeats-1bb50.appspot.com',
-    iosClientId: '621979015912-3587kr9b7jqbuqvr7pvfrpurkitfpjd5.apps.googleusercontent.com',
+    iosClientId:
+        '621979015912-3587kr9b7jqbuqvr7pvfrpurkitfpjd5.apps.googleusercontent.com',
     iosBundleId: 'com.strongeats.strongeats.RunnerTests',
   );
 }

@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:strongeats/auth/uid.dart';
-import 'package:strongeats/components/customTextField.dart';
-import 'package:strongeats/components/exercise_tile.dart';
-import 'package:strongeats/data/workout_data.dart';
-import 'package:strongeats/models/exercise.dart';
-import 'package:strongeats/services/workout_history_db.dart';
-import 'package:strongeats/models/workout_list.dart';
+import 'package:strongeats/custom_classes/customTextField.dart';
+import 'package:strongeats/custom_classes/exercise_tile.dart';
+import 'package:strongeats/objects/exercise.dart';
+import 'package:strongeats/database/workout_history_db.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -18,8 +15,9 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  late Stream<QuerySnapshot> _exercisesStream; // Use late for initialization
+  late Stream<QuerySnapshot> _exercisesStream;
 
+  // read exercise stream from database based on user id and workout name
   @override
   void initState() {
     super.initState();
@@ -39,12 +37,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final _setsController = TextEditingController();
 
   // check if box was tapped
-  void onCheckBoxChanged(String workoutName, String exerciseName) {
-    Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(workoutName, exerciseName);
-  }
+  //void onCheckBoxChanged(String workoutName, String exerciseName) {
+  //  Provider.of<WorkoutData>(context, listen: false)
+  //      .checkOffExercise(workoutName, exerciseName);
+  //}
 
-  // create a new exercise
+  // collect new exercise info from user
   void createNewExercise() {
     showDialog(
       context: context,
@@ -122,11 +120,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
     Exercise newExercise =
         Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
 
-    // add exercise to workout
-    Provider.of<WorkoutData>(context, listen: false)
-        .addExercise(widget.workoutName, newExercise);
-
-    WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExercise);
+    // add exercise to database based on workout name and the new exercise
+    WorkoutHistoryDB().addExercise(widget.workoutName, newExercise);
 
     Navigator.pop(context);
     clear();
@@ -146,52 +141,65 @@ class _WorkoutPageState extends State<WorkoutPage> {
     _setsController.clear();
   }
 
+  // build this users list of exercises based on stored info from database
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
-      builder: (context, value, child) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.workoutName),
-          backgroundColor: Colors.black,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewExercise,
-          child: Icon(Icons.add),
-        ),
-        body: StreamBuilder(
-          stream: _exercisesStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Connection error');
-            }
-            // stream is connected but data is not coming yet
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
-            }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.workoutName),
+        backgroundColor: Colors.black,
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
+        onPressed: createNewExercise,
+        child: Icon(Icons.add),
+      ),
+      body: StreamBuilder(
+        stream: _exercisesStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Connection error');
+          }
+          // stream is connected but data is not coming yet
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text('Loading...');
+          }
 
-            var docs = snapshot.data!.docs;
+          var docs = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) => ExerciseTile(
-                exerciseName: docs[index]['name'],
-                weight: docs[index]['weight'],
-                reps: docs[index]['reps'],
-                sets: docs[index]['sets'],
-                // isCompleted: value
-                //     .getRelevantWorkout(widget.workoutName)
-                //     .exercises[index]
-                //     .isCompleted,
-                // onCheckBoxChanged: (val) => onCheckBoxChanged(
-                //     widget.workoutName,
-                //     value
-                //         .getRelevantWorkout(widget.workoutName)
-                //         .exercises[index]
-                //         .name),
+          if (docs.isEmpty) {
+            // User has no workouts, display a message
+            return Center(
+              child: Text(
+                'Add an exercise to your workout!',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 20,
+                ),
               ),
             );
-          },
-        ),
+          }
+
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) => ExerciseTile(
+              exerciseName: docs[index]['name'],
+              weight: docs[index]['weight'],
+              reps: docs[index]['reps'],
+              sets: docs[index]['sets'],
+              // isCompleted: value
+              //     .getRelevantWorkout(widget.workoutName)
+              //     .exercises[index]
+              //     .isCompleted,
+              // onCheckBoxChanged: (val) => onCheckBoxChanged(
+              //     widget.workoutName,
+              //     value
+              //         .getRelevantWorkout(widget.workoutName)
+              //         .exercises[index]
+              //         .name),
+            ),
+          );
+        },
       ),
     );
   }
