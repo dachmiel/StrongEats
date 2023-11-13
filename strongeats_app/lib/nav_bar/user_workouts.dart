@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/registerTextField.dart';
 import 'package:strongeats/data/workout_data.dart';
 import '../pages/specific_workout_page.dart';
+import 'package:strongeats/auth/uid.dart';
 
 class UserWorkouts extends StatefulWidget {
   @override
@@ -13,39 +15,11 @@ class UserWorkouts extends StatefulWidget {
 class _UserWorkoutsState extends State<UserWorkouts> {
   // text controller
   final _newWorkoutNameController = TextEditingController();
-
-// // email textfield
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-//                     child: TextFormField(
-//                       controller: _emailController,
-//                       decoration: InputDecoration(
-//                         enabledBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.grey),
-//                           borderRadius: BorderRadius.circular(12),
-//                         ),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderSide: BorderSide(color: Colors.black),
-//                           borderRadius: BorderRadius.circular(12),
-//                         ),
-//                         hintText: 'Email',
-//                         fillColor: Colors.grey[200],
-//                         filled: true,
-//                       ),
-//                       hintText: 'Email',
-//                       fillColor: Colors.grey[200],
-//                       filled: true,
-//                       validator: (value) {
-//                         if (value!.isEmpty) {
-//                           return "Enter email";
-//                         }
-//                         bool emailValid = EmailValidator.validate(value);
-//                         if (!emailValid) {
-//                           return "Enter valid email";
-//                         }
-//                       },
-//                     ),
-//                   ),
+  final _workoutsStream = FirebaseFirestore.instance
+      .collection('workoutHistory')
+      .doc(uid)
+      .collection('userWorkouts')
+      .snapshots();
 
   // create a new workout
   void createNewWorkout() {
@@ -123,35 +97,52 @@ class _UserWorkoutsState extends State<UserWorkouts> {
             color: Colors.white,
           ),
         ),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: ListView.builder(
-                      itemCount: value.getWorkoutList().length,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(
-                          value.getWorkoutList()[index].name,
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
+        body: StreamBuilder(
+          stream: _workoutsStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Connection error');
+            }
+            // stream is connected but data is not coming yet
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Loading...');
+            }
+
+            var docs = snapshot.data!.docs;
+            // return Text('${docs.length}');
+            return SafeArea(
+              child: Center(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: ListView.builder(
+                          itemCount: docs.length,
+                          itemBuilder: (context, index) => ListTile(
+                            title: Text(
+                              docs[index]['name'],
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => goToWorkoutPage(
+                                docs[index]['name'],
+                              ),
+                            ),
                           ),
-                          onPressed: () => goToWorkoutPage(
-                              value.getWorkoutList()[index].name),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

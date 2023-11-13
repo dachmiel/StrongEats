@@ -1,45 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:strongeats/models/exercise.dart';
-
+import 'package:strongeats/services/workout_history_db.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/workout.dart';
+import 'package:strongeats/models/workout_list.dart' as listCreation;
 
 class WorkoutData extends ChangeNotifier {
-  List<Workout> workoutList = [
-    Workout(
-      name: "Day 1",
-      exercises: [
-        Exercise(
-          name: "Bench Press",
-          weight: "85",
-          reps: "12",
-          sets: "3",
-        ),
-        Exercise(
-          name: "Squats",
-          weight: "135",
-          reps: "12",
-          sets: "3",
-        ),
-      ],
-    ),
-    Workout(
-      name: "Day 2",
-      exercises: [
-        Exercise(
-          name: "Deadlift",
-          weight: "85",
-          reps: "12",
-          sets: "3",
-        ),
-        Exercise(
-          name: "Bicep Curls",
-          weight: "135",
-          reps: "12",
-          sets: "3",
-        ),
-      ],
-    )
-  ];
+  final dummy = listCreation.getData();
+
+  List<Workout> workoutList = listCreation.workoutListSnap;
 
   // get the list of workouts
 
@@ -56,23 +26,24 @@ class WorkoutData extends ChangeNotifier {
 
   // add a workout
 
-  void addWorkout(String name) {
-    workoutList.add(Workout(name: name, exercises: []));
+  void addWorkout(String workoutName) {
+    workoutList.add(Workout(name: workoutName, exercises: []));
+
+    WorkoutHistoryDB().newWorkout(Workout(name: workoutName, exercises: []));
 
     notifyListeners();
   }
 
   // add an exercise to a workout
 
-  void addExercise(String workoutName, String exerciseName, String weight,
-      String reps, String sets) {
+  void addExercise(String workoutName, Exercise exercise) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     relevantWorkout.exercises.add(
       Exercise(
-        name: exerciseName,
-        weight: weight,
-        reps: reps,
-        sets: sets,
+        name: exercise.name,
+        weight: exercise.weight,
+        reps: exercise.reps,
+        sets: exercise.sets,
       ),
     );
 

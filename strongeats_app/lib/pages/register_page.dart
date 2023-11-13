@@ -33,6 +33,8 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future signUp() async {
     if (_formfield.currentState!.validate()) {
       if (passwordConfirmed()) {
@@ -44,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         // create user
         try {
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          UserCredential result = await _auth.createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );

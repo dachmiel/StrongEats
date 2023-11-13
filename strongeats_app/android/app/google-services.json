@@ -12,7 +12,12 @@
           "package_name": "com.strongeats.strongeats"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "621979015912-ktidnb49roultsglf44v8ns41mo0go96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCR_D7zQjXzXDmiWsI-OKh2FfLG7nsP3zY"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621979015912-ktidnb49roultsglf44v8ns41mo0go96.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "621979015912-3587kr9b7jqbuqvr7pvfrpurkitfpjd5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.strongeats.strongeats.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }
