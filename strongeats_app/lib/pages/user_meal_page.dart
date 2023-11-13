@@ -194,6 +194,7 @@ class _MealPageState extends State<MealPage> {
         backgroundColor: Colors.black,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
         onPressed: createNewFood,
         child: Icon(Icons.add),
       ),

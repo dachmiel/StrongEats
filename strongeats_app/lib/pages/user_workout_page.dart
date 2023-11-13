@@ -150,6 +150,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         backgroundColor: Colors.black,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
         onPressed: createNewExercise,
         child: Icon(Icons.add),
       ),

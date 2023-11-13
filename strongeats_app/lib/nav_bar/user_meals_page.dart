@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
+import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
 import 'package:strongeats/objects/meal.dart';
 import 'package:strongeats/database/meal_history_db.dart';
 import '../pages/user_meal_page.dart';
@@ -78,6 +79,11 @@ class _UserMealsState extends State<UserMeals> {
     clear();
   }
 
+  // delete
+  void delete(String mealName) {
+    MealHistoryDB().deleteMeal(mealName);
+  }
+
   // cancel
   void cancel() {
     Navigator.pop(context);
@@ -93,8 +99,9 @@ class _UserMealsState extends State<UserMeals> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[300],
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
         onPressed: createNewMeal,
         child: const Icon(
           Icons.add,
@@ -109,9 +116,8 @@ class _UserMealsState extends State<UserMeals> {
           }
           // stream is connected but data is not coming yet
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return Center(child: CircularProgressIndicator());
           }
-
           var docs = snapshot.data!.docs;
           // return Text('${docs.length}');
           return SafeArea(
@@ -119,28 +125,10 @@ class _UserMealsState extends State<UserMeals> {
               child: Column(
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: ListView.builder(
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) => ListTile(
-                          title: Text(
-                            docs[index]['name'],
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => goToMealPage(
-                              docs[index]['name'],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                      child: MyListTile(
+                          delete: delete,
+                          docs: docs,
+                          goToWorkoutOrMealPage: goToMealPage)),
                 ],
               ),
             ),

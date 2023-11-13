@@ -35,4 +35,35 @@ class MealHistoryDB {
       'fat': food.fats,
     });
   }
+
+  Future deleteMeal(String mealName) async {
+    try {
+      // Delete the meal document
+      await mealHistory.doc(uid).collection('userMeals').doc(mealName).delete();
+
+      // Optionally, you can delete associated exercises if needed
+      // await workoutHistory.doc(uid).collection('userWorkouts').doc(workoutName).collection('userExercises').get().then((querySnapshot) {
+      //   querySnapshot.docs.forEach((doc) {
+      //     doc.reference.delete();
+      //   });
+      // });
+    } catch (e) {
+      print('Error deleting meal: $e');
+    }
+  }
+
+  Future deleteFood(String mealName, String foodName) async {
+    try {
+      // Delete the food document
+      await mealHistory
+          .doc(uid)
+          .collection('userMeals')
+          .doc(mealName)
+          .collection('userFoods')
+          .doc(foodName)
+          .delete();
+    } catch (e) {
+      print('Error deleting food: $e');
+    }
+  }
 }

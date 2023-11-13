@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
+import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
 import '../pages/user_workout_page.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/objects/workout.dart';
@@ -95,6 +96,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey[900],
         onPressed: createNewWorkout,
         child: const Icon(
           Icons.add,
@@ -121,60 +123,10 @@ class _UserWorkoutsState extends State<UserWorkouts> {
               child: Column(
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.builder(
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) => Dismissible(
-                          direction: DismissDirection.endToStart,
-                          key: Key(docs[index]['name']),
-                          onDismissed: (direction) {
-                            delete(docs[index]['name']);
-                          },
-                          background: Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              // border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.only(right: 16.0),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900],
-                              // border: Border.all(color: Colors.black),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            height: 100, // Set the height
-                            margin: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Center(
-                              child: ListTile(
-                                title: Text(
-                                  docs[index]['name'].toString().toUpperCase(),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                onTap: () =>
-                                    goToWorkoutPage(docs[index]['name']),
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                      child: MyListTile(
+                          delete: delete,
+                          docs: docs,
+                          goToWorkoutOrMealPage: goToWorkoutPage)),
                 ],
               ),
             ),
