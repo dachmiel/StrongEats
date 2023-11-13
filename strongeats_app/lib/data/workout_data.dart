@@ -4,10 +4,12 @@ import 'package:strongeats/services/workout_history_db.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/workout.dart';
-import 'package:strongeats/models/workout_list.dart';
+import 'package:strongeats/models/workout_list.dart' as listCreation;
 
 class WorkoutData extends ChangeNotifier {
-  List<WorkoutStream> workoutList = WorkoutHistoryDB().workouts.listen();
+  final dummy = listCreation.getData();
+  
+  List<Workout> workoutList = listCreation.workoutListSnap;
   /*[
     Workout(
       name: "Day 1",
@@ -46,11 +48,11 @@ class WorkoutData extends ChangeNotifier {
   ];*/
 
   // get the list of workouts
-/*
-  List<WorkoutStream> getWorkoutList() {
-    return _WorkoutListState.workouts;
+
+  List<Workout> getWorkoutList() {
+    return workoutList;
   }
-*/
+
   // get length of a given workout
 
   int numberOfExercisesInWorkout(String workoutName) {
@@ -61,13 +63,15 @@ class WorkoutData extends ChangeNotifier {
   // add a workout
 
   void addWorkout(String workoutName){
-    //workoutList.add(Workout(name: name, exercises: []));
+    workoutList.add(Workout(name: workoutName, exercises: []));
+  
     WorkoutHistoryDB().newWorkout(
       Workout(
         name: workoutName,
         exercises: []
       ));
-
+    
+    // print("\n\n\n\n\n\n\n\n" + listCreation.printWorkoutHistory() + "\n\n\n\n\n\n\n");
     notifyListeners();
   }
 
@@ -104,7 +108,8 @@ class WorkoutData extends ChangeNotifier {
 
   Workout getRelevantWorkout(String workoutName) {
     Workout relevantWorkout = 
-      workoutList.forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
+      workoutList.firstWhere((workout) => workout.name == workoutName);
+      //forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
 
     return relevantWorkout;
   }

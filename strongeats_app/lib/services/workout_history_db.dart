@@ -11,7 +11,7 @@ class WorkoutHistoryDB{
   final CollectionReference workoutHistory = FirebaseFirestore.instance.collection('workoutHistory');
 
   Future newWorkout(Workout workout) async {
-    return await workoutHistory.doc(uid).collection('userWorkouts').doc(workout.name).set({'reps': 0});
+    return await workoutHistory.doc(uid).collection('userWorkouts').doc(workout.name).set({'dummy': 0});
   }
   
   Future updateWorkoutData(String date, Exercise exercise) async {
@@ -22,6 +22,7 @@ class WorkoutHistoryDB{
     });
   }
 
+/*
   // get workout stream
   Stream<List<WorkoutStream>> get workouts {
     return workoutHistory.doc(uid).collection('userWorkouts').snapshots()
@@ -51,7 +52,7 @@ class WorkoutHistoryDB{
       );
     }).toList();
   }
-
+*/
 
 /*
   Future readWorkoutData() async{
@@ -68,3 +69,4 @@ class WorkoutHistoryDB{
     return userWorkouts;
   }
   */
+}
