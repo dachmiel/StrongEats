@@ -4,7 +4,7 @@ import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
 import 'package:strongeats/custom_classes/exercise_tile.dart';
 import 'package:strongeats/objects/exercise.dart';
-import 'package:strongeats/database/write_workout_to_db.dart';
+import 'package:strongeats/database/workout_history_db.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -15,8 +15,9 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  late Stream<QuerySnapshot> _exercisesStream; // Use late for initialization
+  late Stream<QuerySnapshot> _exercisesStream;
 
+  // read exercise stream from database based on user id and workout name
   @override
   void initState() {
     super.initState();
@@ -41,7 +42,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   //      .checkOffExercise(workoutName, exerciseName);
   //}
 
-  // create a new exercise
+  // collect new exercise info from user
   void createNewExercise() {
     showDialog(
       context: context,
@@ -119,11 +120,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
     Exercise newExercise =
         Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
 
-    // add exercise to workout
-    //Provider.of<WorkoutData>(context, listen: false)
-    //    .addExercise(widget.workoutName, newExercise);
-
-    WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExercise);
+    // add exercise to database based on workout name and the new exercise
+    WorkoutHistoryDB().newExercise(widget.workoutName, newExercise);
 
     Navigator.pop(context);
     clear();
@@ -143,6 +141,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     _setsController.clear();
   }
 
+  // build this users list of exercises based on stored info from database
   @override
   Widget build(BuildContext context) {
     return Scaffold(

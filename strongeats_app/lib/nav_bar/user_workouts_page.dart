@@ -4,7 +4,7 @@ import 'package:strongeats/custom_classes/customTextField.dart';
 import '../pages/user_workout_page.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/objects/workout.dart';
-import 'package:strongeats/database/write_workout_to_db.dart';
+import 'package:strongeats/database/workout_history_db.dart';
 
 class UserWorkouts extends StatefulWidget {
   @override
@@ -14,6 +14,7 @@ class UserWorkouts extends StatefulWidget {
 class _UserWorkoutsState extends State<UserWorkouts> {
   // text controller
   final _newWorkoutNameController = TextEditingController();
+  // read this users workouts from database
   final _workoutsStream = FirebaseFirestore.instance
       .collection('workoutHistory')
       .doc(uid)
@@ -62,16 +63,19 @@ class _UserWorkoutsState extends State<UserWorkouts> {
         ));
   }
 
-  // save workout
+  // save workout into database
   void save() {
     // get workout name from text controller
     String newWorkoutName = _newWorkoutNameController.text;
-    // add workout to workoutdata list
-    // Provider.of<WorkoutData>(context, listen: false).addWorkout(newWorkoutName);\
+    // add empty workout to database
     WorkoutHistoryDB().newWorkout(Workout(name: newWorkoutName, exercises: []));
 
     Navigator.pop(context);
     clear();
+  }
+
+  void delete(String workoutName) {
+    WorkoutHistoryDB().deleteWorkout(workoutName);
   }
 
   // cancel
@@ -85,6 +89,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
     _newWorkoutNameController.clear();
   }
 
+  // build this users list of workouts based on stored info from database
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,9 +101,11 @@ class _UserWorkoutsState extends State<UserWorkouts> {
           color: Colors.white,
         ),
       ),
+      // constantly update users workouts based on database
       body: StreamBuilder(
         stream: _workoutsStream,
         builder: (context, snapshot) {
+          // stream connection error
           if (snapshot.hasError) {
             return const Text('Connection error');
           }
@@ -106,9 +113,9 @@ class _UserWorkoutsState extends State<UserWorkouts> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text('Loading...');
           }
-
+          // successful connection and data received
           var docs = snapshot.data!.docs;
-          // return Text('${docs.length}');
+
           return SafeArea(
             child: Center(
               child: Column(
@@ -118,18 +125,48 @@ class _UserWorkoutsState extends State<UserWorkouts> {
                       padding: const EdgeInsets.only(top: 15.0),
                       child: ListView.builder(
                         itemCount: docs.length,
-                        itemBuilder: (context, index) => ListTile(
-                          title: Text(
-                            docs[index]['name'],
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
+                        itemBuilder: (context, index) => Dismissible(
+                          direction: DismissDirection.endToStart,
+                          key: Key(docs[index]['name']),
+                          onDismissed: (direction) {
+                            delete(docs[index]['name']);
+                          },
+                          background: Container(
+                            margin: EdgeInsets.symmetric(vertical: 8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Icon(
+                              Icons.delete,
                               color: Colors.white,
                             ),
-                            onPressed: () => goToWorkoutPage(
-                              docs[index]['name'],
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.only(right: 16.0),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            height: 100, // Set the height
+                            margin: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Center(
+                              child: ListTile(
+                                title: Text(
+                                  docs[index]['name'],
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 25),
+                                ),
+                                onTap: () =>
+                                    goToWorkoutPage(docs[index]['name']),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
                         ),

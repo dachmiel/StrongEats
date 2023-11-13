@@ -4,7 +4,7 @@ import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
 import 'package:strongeats/custom_classes/food_tile.dart';
 import 'package:strongeats/objects/food.dart';
-import 'package:strongeats/database/write_meal_to_db.dart';
+import 'package:strongeats/database/meal_history_db.dart';
 
 class MealPage extends StatefulWidget {
   final String mealName;
@@ -15,8 +15,9 @@ class MealPage extends StatefulWidget {
 }
 
 class _MealPageState extends State<MealPage> {
-  late Stream<QuerySnapshot> _foodsStream; // Use late for initialization
+  late Stream<QuerySnapshot> _foodsStream;
 
+  // read food stream from database based on user id and workout name
   @override
   void initState() {
     super.initState();
@@ -47,7 +48,7 @@ class _MealPageState extends State<MealPage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // exercise name
+            // collect food name
             CustomTextField(
               controller: _newFoodNameController,
               text: 'Food Name',
@@ -57,7 +58,7 @@ class _MealPageState extends State<MealPage> {
               textColor: Colors.black,
             ),
 
-            // weight
+            // collect weight
             CustomTextField(
               controller: _weightController,
               text: 'Weight',
@@ -67,7 +68,7 @@ class _MealPageState extends State<MealPage> {
               textColor: Colors.black,
             ),
 
-            // servings
+            // collect servings
             CustomTextField(
               controller: _servingsController,
               text: 'Servings',
@@ -77,7 +78,7 @@ class _MealPageState extends State<MealPage> {
               textColor: Colors.black,
             ),
 
-            // calories
+            // collect calories
             CustomTextField(
               controller: _caloriesController,
               text: 'Calories',
@@ -87,7 +88,7 @@ class _MealPageState extends State<MealPage> {
               textColor: Colors.black,
             ),
 
-            // proteins
+            // collect proteins
             CustomTextField(
               controller: _proteinsController,
               text: 'Proteins',
@@ -97,7 +98,7 @@ class _MealPageState extends State<MealPage> {
               textColor: Colors.black,
             ),
 
-            // carbs
+            // collect carbs
             CustomTextField(
               controller: _carbsController,
               text: 'Carbs',
@@ -137,7 +138,7 @@ class _MealPageState extends State<MealPage> {
 
   // save food
   void save() {
-    // get food name from text controller
+    // store info from text controller
     String newFoodName = _newFoodNameController.text;
     String weight = _weightController.text;
     String servings = _servingsController.text;
@@ -146,6 +147,7 @@ class _MealPageState extends State<MealPage> {
     String carbs = _carbsController.text;
     String fats = _fatsController.text;
 
+    // create a new food object based on info collected from user
     Food newFood = Food(
       name: newFoodName,
       weight: weight,
@@ -183,6 +185,7 @@ class _MealPageState extends State<MealPage> {
     _fatsController.clear();
   }
 
+  // build this users list of foods based on stored info from database
   @override
   Widget build(BuildContext context) {
     return Scaffold(

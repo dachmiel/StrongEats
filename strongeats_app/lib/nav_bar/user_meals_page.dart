@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
 import 'package:strongeats/objects/meal.dart';
-import 'package:strongeats/database/write_meal_to_db.dart';
+import 'package:strongeats/database/meal_history_db.dart';
 import '../pages/user_meal_page.dart';
 
 class UserMeals extends StatefulWidget {
@@ -16,6 +15,7 @@ class _UserMealsState extends State<UserMeals> {
   // text controller
   final _newMealNameController = TextEditingController();
   final _dateController = TextEditingController();
+  // read this users meals from database
   final _mealsStream = FirebaseFirestore.instance
       .collection('mealHistory')
       .doc(uid)
@@ -89,6 +89,7 @@ class _UserMealsState extends State<UserMeals> {
     _newMealNameController.clear();
   }
 
+  // build this users list of meals based on info from database
   @override
   Widget build(BuildContext context) {
     return Scaffold(
