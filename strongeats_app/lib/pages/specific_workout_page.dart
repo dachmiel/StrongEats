@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/exercise_tile.dart';
 import 'package:strongeats/data/workout_data.dart';
@@ -16,10 +18,18 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  // check box was tapped
-  void onCheckBoxChanged(String workoutName, String exerciseName) {
-    Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(workoutName, exerciseName);
+  late Stream<QuerySnapshot> _exercisesStream; // Use late for initialization
+
+  @override
+  void initState() {
+    super.initState();
+    _exercisesStream = FirebaseFirestore.instance
+        .collection('workoutHistory')
+        .doc(uid)
+        .collection('userWorkouts')
+        .doc(widget.workoutName)
+        .collection('userExercises')
+        .snapshots();
   }
 
   // text controlleres
@@ -27,6 +37,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
   final _setsController = TextEditingController();
+
+  // check if box was tapped
+  void onCheckBoxChanged(String workoutName, String exerciseName) {
+    Provider.of<WorkoutData>(context, listen: false)
+        .checkOffExercise(workoutName, exerciseName);
+  }
 
   // create a new exercise
   void createNewExercise() {
@@ -103,14 +119,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String reps = _repsController.text;
     String sets = _setsController.text;
 
-    Exercise newExercise = Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
+    Exercise newExercise =
+        Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
 
     // add exercise to workout
     Provider.of<WorkoutData>(context, listen: false)
         .addExercise(widget.workoutName, newExercise);
-    
-    WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExercise);
 
+    WorkoutHistoryDB().updateWorkoutData(widget.workoutName, newExercise);
 
     Navigator.pop(context);
     clear();
@@ -142,36 +158,39 @@ class _WorkoutPageState extends State<WorkoutPage> {
           onPressed: createNewExercise,
           child: Icon(Icons.add),
         ),
-        body: ListView.builder(
-          itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-          itemBuilder: (context, index) => ExerciseTile(
-            exerciseName: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .name,
-            weight: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .weight,
-            reps: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .reps,
-            sets: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .sets,
-            isCompleted: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .isCompleted,
-            onCheckBoxChanged: (val) => onCheckBoxChanged(
-                widget.workoutName,
-                value
-                    .getRelevantWorkout(widget.workoutName)
-                    .exercises[index]
-                    .name),
-          ),
+        body: StreamBuilder(
+          stream: _exercisesStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Connection error');
+            }
+            // stream is connected but data is not coming yet
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Loading...');
+            }
+
+            var docs = snapshot.data!.docs;
+
+            return ListView.builder(
+              itemCount: docs.length,
+              itemBuilder: (context, index) => ExerciseTile(
+                exerciseName: docs[index]['name'],
+                weight: docs[index]['weight'],
+                reps: docs[index]['reps'],
+                sets: docs[index]['sets'],
+                // isCompleted: value
+                //     .getRelevantWorkout(widget.workoutName)
+                //     .exercises[index]
+                //     .isCompleted,
+                // onCheckBoxChanged: (val) => onCheckBoxChanged(
+                //     widget.workoutName,
+                //     value
+                //         .getRelevantWorkout(widget.workoutName)
+                //         .exercises[index]
+                //         .name),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -8,44 +8,8 @@ import 'package:strongeats/models/workout_list.dart' as listCreation;
 
 class WorkoutData extends ChangeNotifier {
   final dummy = listCreation.getData();
-  
+
   List<Workout> workoutList = listCreation.workoutListSnap;
-  /*[
-    Workout(
-      name: "Day 1",
-      exercises: [
-        Exercise(
-          name: "Bench Press",
-          weight: "85",
-          reps: "12",
-          sets: "3",
-        ),
-        Exercise(
-          name: "Squats",
-          weight: "135",
-          reps: "12",
-          sets: "3",
-        ),
-      ],
-    ),
-    Workout(
-      name: "Day 2",
-      exercises: [
-        Exercise(
-          name: "Deadlift",
-          weight: "85",
-          reps: "12",
-          sets: "3",
-        ),
-        Exercise(
-          name: "Bicep Curls",
-          weight: "135",
-          reps: "12",
-          sets: "3",
-        ),
-      ],
-    )
-  ];*/
 
   // get the list of workouts
 
@@ -62,15 +26,11 @@ class WorkoutData extends ChangeNotifier {
 
   // add a workout
 
-  void addWorkout(String workoutName){
+  void addWorkout(String workoutName) {
     workoutList.add(Workout(name: workoutName, exercises: []));
-  
-    WorkoutHistoryDB().newWorkout(
-      Workout(
-        name: workoutName,
-        exercises: []
-      ));
-    
+
+    WorkoutHistoryDB().newWorkout(Workout(name: workoutName, exercises: []));
+
     // print("\n\n\n\n\n\n\n\n" + listCreation.printWorkoutHistory() + "\n\n\n\n\n\n\n");
     notifyListeners();
   }
@@ -107,9 +67,9 @@ class WorkoutData extends ChangeNotifier {
   // return relevant workout object, given workout name
 
   Workout getRelevantWorkout(String workoutName) {
-    Workout relevantWorkout = 
-      workoutList.firstWhere((workout) => workout.name == workoutName);
-      //forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
+    Workout relevantWorkout =
+        workoutList.firstWhere((workout) => workout.name == workoutName);
+    //forEach((workoutL) => workoutL.firstWhere((workout) => workout.name == workoutName)) as Workout;     // .firstWhere((workout) => workout.name == workoutName);
 
     return relevantWorkout;
   }
