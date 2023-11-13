@@ -158,11 +158,7 @@ class _MealPageState extends State<MealPage> {
       fats: fats,
     );
 
-    // add exercise to workout
-    //Provider.of<WorkoutData>(context, listen: false)
-    //    .addExercise(widget.workoutName, newExercise);
-
-    MealHistoryDB().updateMealData(widget.mealName, newFood);
+    MealHistoryDB().addFood(widget.mealName, newFood);
 
     Navigator.pop(context);
     clear();

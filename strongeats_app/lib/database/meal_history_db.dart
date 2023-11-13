@@ -18,11 +18,11 @@ class MealHistoryDB {
         .set({'name': meal.name});
   }
 
-  Future updateMealData(String name, Food food) async {
+  Future addFood(String mealName, Food food) async {
     return await mealHistory
         .doc(uid)
         .collection('userMeals')
-        .doc(name)
+        .doc(mealName)
         .collection('foods')
         .doc(food.name)
         .set({
@@ -41,12 +41,18 @@ class MealHistoryDB {
       // Delete the meal document
       await mealHistory.doc(uid).collection('userMeals').doc(mealName).delete();
 
-      // Optionally, you can delete associated exercises if needed
-      // await workoutHistory.doc(uid).collection('userWorkouts').doc(workoutName).collection('userExercises').get().then((querySnapshot) {
-      //   querySnapshot.docs.forEach((doc) {
-      //     doc.reference.delete();
-      //   });
-      // });
+      // delete associated foods
+      await mealHistory
+          .doc(uid)
+          .collection('userMeals')
+          .doc(mealName)
+          .collection('userFoods')
+          .get()
+          .then((querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          doc.reference.delete();
+        });
+      });
     } catch (e) {
       print('Error deleting meal: $e');
     }
@@ -62,19 +68,6 @@ class MealHistoryDB {
           .collection('userFoods')
           .doc(foodName)
           .delete();
-
-      // delete associated foods
-      await mealHistory
-          .doc(uid)
-          .collection('userMeals')
-          .doc(mealName)
-          .collection('userFoods')
-          .get()
-          .then((querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          doc.reference.delete();
-        });
-      });
     } catch (e) {
       print('Error deleting food: $e');
     }

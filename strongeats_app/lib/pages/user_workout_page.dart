@@ -121,7 +121,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Exercise(name: newExerciseName, weight: weight, reps: reps, sets: sets);
 
     // add exercise to database based on workout name and the new exercise
-    WorkoutHistoryDB().newExercise(widget.workoutName, newExercise);
+    WorkoutHistoryDB().addExercise(widget.workoutName, newExercise);
 
     Navigator.pop(context);
     clear();

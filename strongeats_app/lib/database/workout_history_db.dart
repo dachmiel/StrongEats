@@ -20,7 +20,7 @@ class WorkoutHistoryDB {
   }
 
   // write a new exercise to the DB
-  Future newExercise(String workoutName, Exercise exercise) async {
+  Future addExercise(String workoutName, Exercise exercise) async {
     return await workoutHistory
         .doc(uid)
         .collection('userWorkouts')
