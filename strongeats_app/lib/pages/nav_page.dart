@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:strongeats/nav_bar/user_home_page.dart';
-import 'package:strongeats/nav_bar/user_meals_page.dart';
-import 'package:strongeats/nav_bar/user_profile_page.dart';
-import 'package:strongeats/nav_bar/user_workouts_page.dart';
+import 'package:strongeats/nav_bar/user_home.dart';
+import 'package:strongeats/nav_bar/user_meals.dart';
+import 'package:strongeats/nav_bar/user_profile.dart';
+import 'package:strongeats/nav_bar/user_workouts.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
