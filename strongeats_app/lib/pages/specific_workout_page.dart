@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/components/customTextField.dart';
 import 'package:strongeats/components/exercise_tile.dart';
