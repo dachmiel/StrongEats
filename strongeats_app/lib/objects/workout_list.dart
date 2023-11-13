@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:strongeats/models/workout.dart';
+import 'package:strongeats/objects/workout.dart';
 import 'package:strongeats/auth/uid.dart';
 
 // collection reference

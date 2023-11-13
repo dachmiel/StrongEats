@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
-import 'package:strongeats/components/customTextField.dart';
-import 'package:strongeats/components/exercise_tile.dart';
-import 'package:strongeats/models/exercise.dart';
-import 'package:strongeats/services/workout_history_db.dart';
+import 'package:strongeats/custom_classes/customTextField.dart';
+import 'package:strongeats/custom_classes/exercise_tile.dart';
+import 'package:strongeats/objects/exercise.dart';
+import 'package:strongeats/database/write_workout_to_db.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -146,48 +146,48 @@ class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.workoutName),
-          backgroundColor: Colors.black,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewExercise,
-          child: Icon(Icons.add),
-        ),
-        body: StreamBuilder(
-          stream: _exercisesStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Connection error');
-            }
-            // stream is connected but data is not coming yet
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
-            }
+      appBar: AppBar(
+        title: Text(widget.workoutName),
+        backgroundColor: Colors.black,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createNewExercise,
+        child: Icon(Icons.add),
+      ),
+      body: StreamBuilder(
+        stream: _exercisesStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Connection error');
+          }
+          // stream is connected but data is not coming yet
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text('Loading...');
+          }
 
-            var docs = snapshot.data!.docs;
+          var docs = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) => ExerciseTile(
-                exerciseName: docs[index]['name'],
-                weight: docs[index]['weight'],
-                reps: docs[index]['reps'],
-                sets: docs[index]['sets'],
-                // isCompleted: value
-                //     .getRelevantWorkout(widget.workoutName)
-                //     .exercises[index]
-                //     .isCompleted,
-                // onCheckBoxChanged: (val) => onCheckBoxChanged(
-                //     widget.workoutName,
-                //     value
-                //         .getRelevantWorkout(widget.workoutName)
-                //         .exercises[index]
-                //         .name),
-              ),
-            );
-          },
-        ),
-      );
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) => ExerciseTile(
+              exerciseName: docs[index]['name'],
+              weight: docs[index]['weight'],
+              reps: docs[index]['reps'],
+              sets: docs[index]['sets'],
+              // isCompleted: value
+              //     .getRelevantWorkout(widget.workoutName)
+              //     .exercises[index]
+              //     .isCompleted,
+              // onCheckBoxChanged: (val) => onCheckBoxChanged(
+              //     widget.workoutName,
+              //     value
+              //         .getRelevantWorkout(widget.workoutName)
+              //         .exercises[index]
+              //         .name),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

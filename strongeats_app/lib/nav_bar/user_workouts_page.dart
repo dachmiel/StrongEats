@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:strongeats/components/customTextField.dart';
-import '../pages/specific_workout_page.dart';
+import 'package:strongeats/custom_classes/customTextField.dart';
+import '../pages/user_workout_page.dart';
 import 'package:strongeats/auth/uid.dart';
-import 'package:strongeats/models/workout.dart';
-import 'package:strongeats/services/workout_history_db.dart';
+import 'package:strongeats/objects/workout.dart';
+import 'package:strongeats/database/write_workout_to_db.dart';
 
 class UserWorkouts extends StatefulWidget {
   @override
@@ -88,61 +88,60 @@ class _UserWorkoutsState extends State<UserWorkouts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewWorkout,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
+      backgroundColor: Colors.black,
+      floatingActionButton: FloatingActionButton(
+        onPressed: createNewWorkout,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
-        body: StreamBuilder(
-          stream: _workoutsStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Connection error');
-            }
-            // stream is connected but data is not coming yet
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
-            }
+      ),
+      body: StreamBuilder(
+        stream: _workoutsStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Connection error');
+          }
+          // stream is connected but data is not coming yet
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text('Loading...');
+          }
 
-            var docs = snapshot.data!.docs;
-            // return Text('${docs.length}');
-            return SafeArea(
-              child: Center(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        child: ListView.builder(
-                          itemCount: docs.length,
-                          itemBuilder: (context, index) => ListTile(
-                            title: Text(
-                              docs[index]['name'],
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+          var docs = snapshot.data!.docs;
+          // return Text('${docs.length}');
+          return SafeArea(
+            child: Center(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: ListView.builder(
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) => ListTile(
+                          title: Text(
+                            docs[index]['name'],
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
                             ),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white,
-                              ),
-                              onPressed: () => goToWorkoutPage(
-                                docs[index]['name'],
-                              ),
+                            onPressed: () => goToWorkoutPage(
+                              docs[index]['name'],
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
-      );
+            ),
+          );
+        },
+      ),
+    );
   }
 }

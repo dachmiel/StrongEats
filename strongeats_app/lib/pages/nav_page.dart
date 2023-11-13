@@ -1,18 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:strongeats/nav_bar/user_home.dart';
-import 'package:strongeats/nav_bar/user_meals.dart';
-import 'package:strongeats/nav_bar/user_profile.dart';
-import 'package:strongeats/nav_bar/user_workouts.dart';
+import 'package:strongeats/nav_bar/user_home_page.dart';
+import 'package:strongeats/nav_bar/user_meals_page.dart';
+import 'package:strongeats/nav_bar/user_profile_page.dart';
+import 'package:strongeats/nav_bar/user_workouts_page.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class NavPage extends StatefulWidget {
+  const NavPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<NavPage> createState() => _NavPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _NavPageState extends State<NavPage> {
   int _selectedIndex = 0;
   final user = FirebaseAuth.instance.currentUser!;
   void _nagivateBottomBar(int index) {

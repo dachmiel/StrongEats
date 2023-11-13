@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:strongeats/auth/uid.dart' as userID;
-import 'package:strongeats/models/exercise.dart';
-import 'package:strongeats/models/workout.dart';
+import 'package:strongeats/objects/exercise.dart';
+import 'package:strongeats/objects/workout.dart';
 
 class WorkoutHistoryDB {
   final uid = userID.uid;
@@ -18,11 +18,11 @@ class WorkoutHistoryDB {
         .set({'name': workout.name});
   }
 
-  Future updateWorkoutData(String date, Exercise exercise) async {
+  Future updateWorkoutData(String name, Exercise exercise) async {
     return await workoutHistory
         .doc(uid)
         .collection('userWorkouts')
-        .doc(date)
+        .doc(name)
         .collection('userExercises')
         .doc(exercise.name)
         .set({

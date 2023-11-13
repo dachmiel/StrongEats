@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:strongeats/components/myButton.dart';
-import 'package:strongeats/components/loginTextField.dart';
-import 'package:strongeats/components/square_tile.dart';
-import 'package:strongeats/services/auth_service.dart';
+import 'package:strongeats/custom_classes/myButton.dart';
+import 'package:strongeats/custom_classes/loginTextField.dart';
+import 'package:strongeats/custom_classes/square_tile.dart';
+import 'package:strongeats/auth/google_auth.dart';
 
 import 'forgot_pw_page.dart';
 
@@ -40,7 +40,8 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       try {
-        UserCredential result = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential result =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
