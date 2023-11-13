@@ -38,7 +38,7 @@ class _NavPageState extends State<NavPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
         title: Text(

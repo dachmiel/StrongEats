@@ -99,7 +99,7 @@ class _UserMealsState extends State<UserMeals> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.grey[900],
         onPressed: createNewMeal,
