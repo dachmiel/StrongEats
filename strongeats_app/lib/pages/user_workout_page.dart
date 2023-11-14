@@ -161,9 +161,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
           if (snapshot.hasError) {
             return const Text('Connection error');
           }
-          // stream is connected but data is not coming yet
+
+          /// stream is connected but data is not coming yet
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return Center(child: CircularProgressIndicator());
           }
 
           var docs = snapshot.data!.docs;
