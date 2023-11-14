@@ -1,170 +1,138 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:strongeats/auth/uid.dart';
-import 'package:strongeats/custom_classes/text_box.dart';
+import 'package:strongeats/profile/user_details.dart';
 
-class UserProfile extends StatefulWidget {
+class UserProfile extends StatelessWidget {
   @override
-  State<UserProfile> createState() => _UserProfileState();
-}
-
-class _UserProfileState extends State<UserProfile> {
-  // user
-  final _userStream = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.email)
-      .snapshots();
-
-  // edit field
-  Future<void> editField(String field) async {
-    String newValue = "";
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: Text(
-          "Edit $field",
-          style: const TextStyle(color: Colors.white),
-        ),
-        content: TextField(
-          autofocus: true,
-          style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: "Enter new $field",
-            hintStyle: TextStyle(color: Colors.grey),
-          ),
-          onChanged: (value) {
-            newValue = value;
-          },
-        ),
-        actions: [
-          // save button
-          MaterialButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
-            child: Text(
-              'Save',
-              style: TextStyle(color: Colors.white),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Column(
+          // Use a Column to stack widgets vertically
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return UserDetails();
+                    },
+                  ),
+                );
+              },
+              icon: Icon(Icons.add),
+              label: Text("User Info"),
+              //color: Colors.black,
             ),
-          ),
-
-          // cancel button
-          MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white),
+            SizedBox(height: 20), // Adding some space between buttons
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ThirdRoute()));
+              },
+              icon: Icon(Icons.remove),
+              label: Text("Update Goal Weight"),
             ),
-          ),
-        ],
+
+            SizedBox(height: 20), // Adding some space between buttons
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ThirdRoute()));
+              },
+              icon: Icon(Icons.history),
+              label: Text("Workout Preferences"),
+            ),
+
+            SizedBox(height: 20), // Adding some space between buttons
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const FourthRoute()));
+              },
+              icon: Icon(Icons.history),
+              label: Text("Account Settings"),
+            ),
+          ],
+        ),
       ),
     );
-
-    // update in firestore
-    if (newValue.trim().length > 0) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .update({field: newValue});
-    }
   }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: _userStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.data() != null) {
-          final userData = snapshot.data!.data() as Map<String, dynamic>;
-          return ListView(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("User Info"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
+  }
+}
 
-              // profile icon
-              const Icon(
-                Icons.person,
-                size: 72,
-              ),
+class ThirdRoute extends StatelessWidget {
+  const ThirdRoute({super.key});
 
-              const SizedBox(
-                height: 10,
-              ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Update Goal Weight "),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
+  }
+}
 
-              // display user email
-              Text(
-                FirebaseAuth.instance.currentUser!.email!,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
-              ),
+class FourthRoute extends StatelessWidget {
+  const FourthRoute({super.key});
 
-              const SizedBox(
-                height: 50,
-              ),
-
-              // user details
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: Text(
-                  'My Details',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-
-              // name
-
-              // email
-
-              // age
-              MyTextBox(
-                text: userData['age'],
-                sectionName: 'Age',
-                onPressed: () => editField('age'),
-              ),
-
-              // sex
-              MyTextBox(
-                text: userData['sex'],
-                sectionName: 'Sex',
-                onPressed: () => editField('sex'),
-              ),
-
-              // weight
-              MyTextBox(
-                text: userData['weight'],
-                sectionName: 'Weight',
-                onPressed: () => editField('weight'),
-              ),
-
-              // height
-              MyTextBox(
-                text: userData['height'],
-                sectionName: 'Height',
-                onPressed: () => editField('height'),
-              ),
-
-              // BMI
-              MyTextBox(
-                text: userData['bmi'],
-                sectionName: 'BMI',
-                onPressed: () => editField('bmi'),
-              ),
-
-              // body fat
-            ],
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error' + snapshot.error.toString(),
-            ),
-          );
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("User Info"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
     );
   }
 }

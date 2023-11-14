@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:strongeats/nav_bar/user_home.dart';
 import 'package:strongeats/nav_bar/user_meals.dart';
 import 'package:strongeats/nav_bar/user_profile.dart';
+import 'package:strongeats/profile/user_details.dart';
 import 'package:strongeats/nav_bar/user_workouts.dart';
 
 class NavPage extends StatefulWidget {
