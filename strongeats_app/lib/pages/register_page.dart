@@ -46,14 +46,30 @@ class _RegisterPageState extends State<RegisterPage> {
         );
         // create user
         try {
-          UserCredential result = await _auth.createUserWithEmailAndPassword(
+          UserCredential userCredential =
+              await _auth.createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );
 
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(userCredential.user!.email!)
+              .set({
+            'email': _emailController.text.trim(),
+            'username': _emailController.text.split('@')[0], //initial username
+            'first name': _firstNameController.text.trim(),
+            'last name': _lastNameController.text.trim(),
+            'age': 'a',
+            'sex': 'a',
+            'weight': 'a',
+            'height': 'a',
+            'bmi': 'a',
+          });
+
           // add user details
-          addUserDetails(_firstNameController.text.trim(),
-              _lastNameController.text.trim(), _emailController.text.trim());
+          // addUserDetails(_firstNameController.text.trim(),
+          //     _lastNameController.text.trim(), _emailController.text.trim());
 
           Navigator.of(context).pop();
         } on FirebaseAuthException catch (e) {
@@ -64,13 +80,13 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  Future addUserDetails(String firstName, String lastName, String email) async {
-    await FirebaseFirestore.instance.collection('users').add({
-      'first name': firstName,
-      'last name': lastName,
-      'email': email,
-    });
-  }
+  // Future addUserDetails(String firstName, String lastName, String email) async {
+  //   await FirebaseFirestore.instance.collection('users').add({
+  //     'first name': firstName,
+  //     'last name': lastName,
+  //     'email': email,
+  //   });
+  // }
 
   bool passwordConfirmed() {
     if (_passwordController.text.trim() ==

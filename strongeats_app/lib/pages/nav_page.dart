@@ -53,14 +53,14 @@ class _NavPageState extends State<NavPage> {
             child: Icon(Icons.logout),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(
-            height: 1,
-            thickness: 1,
-            color: Colors.grey[600],
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(1),
+        //   child: Divider(
+        //     height: 1,
+        //     thickness: 1,
+        //     color: Colors.grey[600],
+        //   ),
+        // ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
