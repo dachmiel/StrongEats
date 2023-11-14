@@ -13,7 +13,7 @@ class _UserProfileState extends State<UserProfile> {
   // user
   final _userStream = FirebaseFirestore.instance
       .collection('users')
-      .doc(currentUser.email)
+      .doc(FirebaseAuth.instance.currentUser!.email)
       .snapshots();
 
   // edit field
@@ -62,7 +62,10 @@ class _UserProfileState extends State<UserProfile> {
 
     // update in firestore
     if (newValue.trim().length > 0) {
-      await usersCollection.doc(currentUser.email).update({field: newValue});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .update({field: newValue});
     }
   }
 
@@ -91,7 +94,7 @@ class _UserProfileState extends State<UserProfile> {
 
               // display user email
               Text(
-                currentUser.email!,
+                FirebaseAuth.instance.currentUser!.email!,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),

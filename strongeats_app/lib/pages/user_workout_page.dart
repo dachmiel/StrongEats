@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
@@ -23,7 +24,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     super.initState();
     _exercisesStream = FirebaseFirestore.instance
         .collection('workoutHistory')
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userWorkouts')
         .doc(widget.workoutName)
         .collection('userExercises')

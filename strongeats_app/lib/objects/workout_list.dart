@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strongeats/objects/workout.dart';
 import 'package:strongeats/auth/uid.dart';
 
 // collection reference
 final CollectionReference workoutHistory = FirebaseFirestore.instance
     .collection('workoutHistory')
-    .doc(uid)
+    .doc(FirebaseAuth.instance.currentUser!.email)
     .collection('userWorkouts');
 
 List<dynamic> workoutNames = [];

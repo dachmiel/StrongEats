@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strongeats/auth/uid.dart' as userID;
 import 'package:strongeats/objects/exercise.dart';
 import 'package:strongeats/objects/workout.dart';
 
 class WorkoutHistoryDB {
-  final uid = userID.uid;
-
   // collection reference
   final CollectionReference workoutHistory =
       FirebaseFirestore.instance.collection('workoutHistory');
@@ -13,7 +12,7 @@ class WorkoutHistoryDB {
   // write a new workout to the DB
   Future newWorkout(Workout workout) async {
     return await workoutHistory
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userWorkouts')
         .doc(workout.name)
         .set({'name': workout.name});
@@ -22,7 +21,7 @@ class WorkoutHistoryDB {
   // write a new exercise to the DB
   Future addExercise(String workoutName, Exercise exercise) async {
     return await workoutHistory
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userWorkouts')
         .doc(workoutName)
         .collection('userExercises')
@@ -39,14 +38,14 @@ class WorkoutHistoryDB {
     try {
       // Delete the workout document
       await workoutHistory
-          .doc(uid)
+          .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('userWorkouts')
           .doc(workoutName)
           .delete();
 
       // delete associated exercises
       await workoutHistory
-          .doc(uid)
+          .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('userWorkouts')
           .doc(workoutName)
           .collection('userExercises')
@@ -65,7 +64,7 @@ class WorkoutHistoryDB {
     try {
       // Delete the workout document
       await workoutHistory
-          .doc(uid)
+          .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('userWorkouts')
           .doc(workoutName)
           .collection('userExercises')

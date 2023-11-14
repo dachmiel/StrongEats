@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
@@ -14,12 +15,13 @@ class UserMeals extends StatefulWidget {
 
 class _UserMealsState extends State<UserMeals> {
   // text controller
+
   final _newMealNameController = TextEditingController();
   final _dateController = TextEditingController();
   // read this users meals from database
   final _mealsStream = FirebaseFirestore.instance
       .collection('mealHistory')
-      .doc(uid)
+      .doc(FirebaseAuth.instance.currentUser!.email)
       .collection('userMeals')
       .snapshots();
 

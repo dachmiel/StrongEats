@@ -21,6 +21,10 @@ class _NavPageState extends State<NavPage> {
     });
   }
 
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
   final List<String> _pageTitles = [
     'Home',
     'Workouts',
@@ -47,9 +51,7 @@ class _NavPageState extends State<NavPage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-            },
+            onTap: signOut,
             child: Icon(Icons.logout),
           ),
         ],
