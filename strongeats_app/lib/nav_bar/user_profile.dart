@@ -71,7 +71,7 @@ class _UserProfileState extends State<UserProfile> {
     return StreamBuilder<DocumentSnapshot>(
       stream: _userStream,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data!.data() != null) {
           final userData = snapshot.data!.data() as Map<String, dynamic>;
           return ListView(
             children: [
