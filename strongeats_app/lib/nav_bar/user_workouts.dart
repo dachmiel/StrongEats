@@ -138,7 +138,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
           }
           // stream is connected but data is not coming yet
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return Center(child: CircularProgressIndicator());
           }
           // successful connection and data received
           var docs = snapshot.data!.docs;

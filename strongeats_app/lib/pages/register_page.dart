@@ -54,17 +54,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
           FirebaseFirestore.instance
               .collection('users')
-              .doc(userCredential.user!.email!)
+              .doc(userCredential.user!.email)
               .set({
             'email': _emailController.text.trim(),
             'username': _emailController.text.split('@')[0], //initial username
             'first name': _firstNameController.text.trim(),
             'last name': _lastNameController.text.trim(),
-            'age': 'a',
-            'sex': 'a',
-            'weight': 'a',
-            'height': 'a',
-            'bmi': 'a',
+            'age': '',
+            'sex': '',
+            'weight': '',
+            'height': '',
+            'bmi': '',
           });
 
           // add user details

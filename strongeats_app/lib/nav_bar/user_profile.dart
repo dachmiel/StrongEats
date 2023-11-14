@@ -13,11 +13,58 @@ class _UserProfileState extends State<UserProfile> {
   // user
   final _userStream = FirebaseFirestore.instance
       .collection('users')
-      .doc(user!.email)
+      .doc(currentUser.email)
       .snapshots();
 
   // edit field
-  Future<void> editField(String field) async {}
+  Future<void> editField(String field) async {
+    String newValue = "";
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: Text(
+          "Edit $field",
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: TextField(
+          autofocus: true,
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Enter new $field",
+            hintStyle: TextStyle(color: Colors.grey),
+          ),
+          onChanged: (value) {
+            newValue = value;
+          },
+        ),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(newValue),
+            child: Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // update in firestore
+    if (newValue.trim().length > 0) {
+      await usersCollection.doc(currentUser.email).update({field: newValue});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +91,7 @@ class _UserProfileState extends State<UserProfile> {
 
               // display user email
               Text(
-                user!.email!,
+                currentUser.email!,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
