@@ -228,9 +228,9 @@ class _MealPageState extends State<MealPage> {
               weight: docs[index]['weight'],
               servings: docs[index]['servings'],
               calories: docs[index]['calories'],
-              proteins: docs[index]['proteins'],
+              proteins: docs[index]['protein'],
               carbs: docs[index]['carbs'],
-              fats: docs[index]['fats'],
+              fats: docs[index]['fat'],
               // isCompleted: value
               //     .getRelevantWorkout(widget.workoutName)
               //     .exercises[index]

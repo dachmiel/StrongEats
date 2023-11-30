@@ -22,7 +22,7 @@ class MealHistoryDB {
         .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userMeals')
         .doc(mealName)
-        .collection('foods')
+        .collection('userFoods')
         .doc(food.name)
         .set({
       'name': food.name,
