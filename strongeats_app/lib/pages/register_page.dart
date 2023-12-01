@@ -21,6 +21,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final _confirmpasswordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _sexController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+
   final _formfield = GlobalKey<FormState>();
 
   @override
@@ -30,6 +35,10 @@ class _RegisterPageState extends State<RegisterPage> {
     _confirmpasswordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _ageController.dispose();
+    _sexController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
     super.dispose();
   }
 
@@ -60,10 +69,10 @@ class _RegisterPageState extends State<RegisterPage> {
             'username': _emailController.text.split('@')[0], //initial username
             'first name': _firstNameController.text.trim(),
             'last name': _lastNameController.text.trim(),
-            'age': '',
-            'sex': '',
-            'weight': '',
-            'height': '',
+            'age': _ageController.text.trim(),
+            'sex': _sexController.text.trim(),
+            'weight': _weightController.text.trim(),
+            'height': _heightController.text.trim(),
             'bmi': '',
           });
 
@@ -224,6 +233,77 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
 
+                  const SizedBox(height: 10),
+
+                   // Age textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RegisterTextField(
+                      controller: _ageController,
+                      text: "Age",
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Age";
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                    ),
+                  ),
+
+                     const SizedBox(height: 10),
+
+                   // Sex textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RegisterTextField(
+                      controller: _sexController,
+                      text: "Sex",
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Sex";
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                    ),
+                  ),
+
+                     const SizedBox(height: 10),
+
+                   // Weight textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RegisterTextField(
+                      controller: _weightController,
+                      text: "Weight",
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Weight";
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                    ),
+                  ),
+
+                     const SizedBox(height: 10),
+
+                   // Height textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RegisterTextField(
+                      controller: _heightController,
+                      text: "Height",
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Height";
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                    ),
+                  ),
                   const SizedBox(height: 20),
 
                   // sign up button
