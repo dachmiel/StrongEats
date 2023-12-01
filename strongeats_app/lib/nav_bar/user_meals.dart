@@ -7,6 +7,7 @@ import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
 import 'package:strongeats/objects/meal.dart';
 import 'package:strongeats/database/meal_history_db.dart';
 import '../pages/user_meal_page.dart';
+import 'package:intl/intl.dart';
 
 class UserMeals extends StatefulWidget {
   @override
@@ -31,13 +32,35 @@ class _UserMealsState extends State<UserMeals> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create new meal"),
-        content: CustomTextField(
-          controller: _newMealNameController,
-          text: 'Meal name',
-          obscureText: false,
-          borderColor: Colors.grey,
-          fillColor: Colors.white,
-          textColor: Colors.black,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _dateController,
+              decoration: InputDecoration(
+              filled: true,
+              labelText: 'Meal Date',
+              prefixIcon: Icon(Icons.calendar_today),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+              readOnly: true,
+              onTap: () {
+                _selectDate();
+              },
+            ),
+
+            CustomTextField(
+              controller: _newMealNameController,
+              text: 'Meal name',
+              obscureText: false,
+              borderColor: Colors.grey,
+              fillColor: Colors.white,
+              textColor: Colors.black,
+            ),
+          ]
         ),
         actions: [
           // save button
@@ -54,6 +77,22 @@ class _UserMealsState extends State<UserMeals> {
         ],
       ),
     );
+  }
+
+Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (_picked != null) {
+      String formattedDate = DateFormat("MMMM dd, yyyy").format(_picked);
+      setState(() {
+        _dateController.text = formattedDate.toString();
+      });
+    }
   }
 
   // go to a specific meal page
@@ -75,7 +114,7 @@ class _UserMealsState extends State<UserMeals> {
 
     // add meal to mealdata list
     // Provider.of<MealData>(context, listen: false).addMeal(newMealName);
-    MealHistoryDB().newMeal(Meal(name: newMealName, foods: []));
+    MealHistoryDB().newMeal(Meal(name: (date + " " + newMealName), foods: []));
 
     Navigator.pop(context);
     clear();
