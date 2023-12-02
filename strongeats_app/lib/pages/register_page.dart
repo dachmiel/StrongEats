@@ -25,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _sexController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
+  final _goalController = TextEditingController();
 
   final _formfield = GlobalKey<FormState>();
 
@@ -38,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _ageController.dispose();
     _sexController.dispose();
     _weightController.dispose();
+    _goalController.dispose();
     _heightController.dispose();
     super.dispose();
   }
@@ -61,6 +63,33 @@ class _RegisterPageState extends State<RegisterPage> {
             password: _passwordController.text.trim(),
           );
 
+          var age = int.parse(_ageController.text.trim());
+          var weight = int.parse(_weightController.text.trim());
+          var goal = int.parse(_goalController.text.trim());
+          var heightList = _heightController.text.trim().split('\'');
+          var height = (12 * int.parse(heightList[0])) + int.parse(heightList[1]);
+          var male = (_sexController.text.trim().toLowerCase() == "male");
+
+          var maintenance = 0;
+          var calorieGoal = 0;
+
+          if (male){
+            maintenance = ((66 + (6.2 * weight) + (12.7 * height) - (6.76 * age)) * 1.465).round();
+          }
+          else{
+            maintenance = ((655 + (4.35 * weight) + (4.7 * height) - (4.7 * age)) * 1.465).round();
+          }
+
+          if (goal < weight){
+            calorieGoal = maintenance - 250;
+          }
+          else if (goal > weight){
+            calorieGoal = maintenance + 250;
+          }
+          else{
+            calorieGoal = maintenance;
+          }
+
           FirebaseFirestore.instance
               .collection('users')
               .doc(userCredential.user!.email)
@@ -72,7 +101,10 @@ class _RegisterPageState extends State<RegisterPage> {
             'age': _ageController.text.trim(),
             'sex': _sexController.text.trim(),
             'weight': _weightController.text.trim(),
+            'goal weight': _goalController.text.trim(),
             'height': _heightController.text.trim(),
+            'maintenance calories': maintenance,
+            'goal calories': calorieGoal,
             'bmi': '',
           });
 
@@ -280,6 +312,24 @@ class _RegisterPageState extends State<RegisterPage> {
                       validator: (text) {
                         if (text!.isEmpty) {
                           return "Weight";
+                        }
+                        return null;
+                      },
+                      obscureText: false,
+                    ),
+                  ),
+
+                     const SizedBox(height: 10),
+                  
+                   // Goal Weight textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: RegisterTextField(
+                      controller: _goalController,
+                      text: "Goal Weight",
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          return "Goal Weight";
                         }
                         return null;
                       },
