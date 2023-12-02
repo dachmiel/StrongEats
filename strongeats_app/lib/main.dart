@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/rendering.dart';
 import 'package:strongeats/auth/default_page.dart';
 import 'firebase_options.dart';
 
@@ -8,7 +9,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  // debugPaintSizeEnabled = true;
   runApp(const MyApp());
 }
 

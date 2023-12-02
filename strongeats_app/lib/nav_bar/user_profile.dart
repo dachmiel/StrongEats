@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:strongeats/profile/user_details.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +37,7 @@ class UserProfile extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ThirdRoute()));
+                        builder: (context) => const UpdateGoalWeightPage()));
               },
               icon: Icon(Icons.remove),
               label: Text("Update Goal Weight"),
@@ -44,7 +49,7 @@ class UserProfile extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ThirdRoute()));
+                        builder: (context) => const WorkoutPreferencesPage()));
               },
               icon: Icon(Icons.history),
               label: Text("Workout Preferences"),
@@ -56,7 +61,7 @@ class UserProfile extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const FourthRoute()));
+                        builder: (context) => const AccountSettingsPage()));
               },
               icon: Icon(Icons.history),
               label: Text("Account Settings"),
@@ -68,14 +73,37 @@ class UserProfile extends StatelessWidget {
   }
 }
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({super.key});
+class UpdateGoalWeightPage extends StatelessWidget {
+  const UpdateGoalWeightPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("User Info"),
+        title: const Text("Update Goal Weight"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+      ),
+      body: Center(
+          // child: ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          //   child: const Text('Go back!'),
+          // ),
+          ),
+    );
+  }
+}
+
+class WorkoutPreferencesPage extends StatelessWidget {
+  const WorkoutPreferencesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Workout Preferences"),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
@@ -91,37 +119,14 @@ class SecondRoute extends StatelessWidget {
   }
 }
 
-class ThirdRoute extends StatelessWidget {
-  const ThirdRoute({super.key});
+class AccountSettingsPage extends StatelessWidget {
+  const AccountSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Update Goal Weight "),
-        centerTitle: true,
-        backgroundColor: Colors.black,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
-
-class FourthRoute extends StatelessWidget {
-  const FourthRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("User Info"),
+        title: const Text("Account Settings"),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
