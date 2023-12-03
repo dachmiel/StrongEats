@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strongeats/profile/user_details.dart';
+import 'package:strongeats/profile/user_weight.dart';
+import 'package:strongeats/profile/user_account.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -37,7 +39,7 @@ class _UserProfileState extends State<UserProfile> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const UpdateGoalWeightPage()));
+                        builder: (context) =>  UserWeight()));
               },
               icon: Icon(Icons.remove),
               label: Text("Update Goal Weight"),
@@ -61,7 +63,7 @@ class _UserProfileState extends State<UserProfile> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const AccountSettingsPage()));
+                        builder: (context) => UserAccount()));
               },
               icon: Icon(Icons.history),
               label: Text("Account Settings"),
