@@ -122,8 +122,6 @@ class _UserWeightState extends State<UserWeight> {
                   sectionName: 'weight',
                   onPressed: () => editField('weight'),
                 ),
-
-                
               ],
             );
           } else if (snapshot.hasError) {

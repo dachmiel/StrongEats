@@ -58,6 +58,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect weight
             CustomTextField(
@@ -68,6 +69,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect servings
             CustomTextField(
@@ -78,6 +80,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect calories
             CustomTextField(
@@ -88,6 +91,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect proteins
             CustomTextField(
@@ -98,6 +102,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect carbs
             CustomTextField(
@@ -108,6 +113,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // fats
             CustomTextField(

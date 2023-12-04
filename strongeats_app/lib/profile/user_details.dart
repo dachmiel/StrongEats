@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/text_box.dart';
+import 'package:strongeats/objects/height.dart';
+import 'package:strongeats/objects/sex.dart';
 
 class UserDetails extends StatefulWidget {
   @override
@@ -37,6 +39,173 @@ class _UserDetailsState extends State<UserDetails> {
           onChanged: (value) {
             newValue = value;
           },
+        ),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(newValue),
+            child: Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // update in firestore
+    if (newValue.trim().length > 0) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .update({field: newValue});
+    }
+  }
+
+  Future<void> editSexField(String field) async {
+    String currentSex = "";
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: Text(
+          "$field",
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: ListWheelScrollView.useDelegate(
+          onSelectedItemChanged: (value) {
+            setState(
+              () {
+                if (value == 0) {
+                  currentSex = 'Male';
+                } else {
+                  currentSex = 'Female';
+                }
+              },
+            );
+          },
+          itemExtent: 50,
+          physics: FixedExtentScrollPhysics(),
+          childDelegate: ListWheelChildBuilderDelegate(
+              childCount: 2,
+              builder: (context, index) {
+                if (index == 0) {
+                  return MySex(
+                    isItMale: true,
+                  );
+                } else {
+                  return MySex(
+                    isItMale: false,
+                  );
+                }
+              }),
+        ),
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(currentSex),
+            child: Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // update in firestore
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({field: currentSex});
+  }
+
+  Future<void> editHeightField(String field) async {
+    String newValue = "";
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: Text(
+          "$field",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Row(
+          children: [
+            // feet wheel
+            Container(
+              width: 70,
+              child: ListWheelScrollView.useDelegate(
+                itemExtent: 50,
+                physics: FixedExtentScrollPhysics(),
+                childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 13,
+                    builder: (context, index) {
+                      return MyFeet(
+                        feet: index,
+                      );
+                    }),
+              ),
+            ),
+            // inches wheel
+            Container(
+              width: 70,
+              child: ListWheelScrollView.useDelegate(
+                itemExtent: 50,
+                physics: FixedExtentScrollPhysics(),
+                childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 12,
+                    builder: (context, index) {
+                      return MyInches(
+                        inches: index,
+                      );
+                    }),
+              ),
+            ),
+            // units wheel
+            Container(
+              width: 70,
+              child: ListWheelScrollView.useDelegate(
+                itemExtent: 50,
+                physics: FixedExtentScrollPhysics(),
+                childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 2,
+                    builder: (context, index) {
+                      if (index == 0) {
+                        return CmIn(
+                          isItCm: true,
+                        );
+                      } else {
+                        return CmIn(
+                          isItCm: false,
+                        );
+                      }
+                    }),
+              ),
+            ),
+          ],
         ),
         actions: [
           // save button
@@ -118,10 +287,6 @@ class _UserDetailsState extends State<UserDetails> {
                   ),
                 ),
 
-                // name
-
-                // email
-
                 // age
                 MyTextBox(
                   text: userData['age'],
@@ -133,7 +298,7 @@ class _UserDetailsState extends State<UserDetails> {
                 MyTextBox(
                   text: userData['sex'],
                   sectionName: 'Sex',
-                  onPressed: () => editField('sex'),
+                  onPressed: () => editSexField('Sex'),
                 ),
 
                 // weight
@@ -147,7 +312,7 @@ class _UserDetailsState extends State<UserDetails> {
                 MyTextBox(
                   text: userData['height'],
                   sectionName: 'Height',
-                  onPressed: () => editField('height'),
+                  onPressed: () => editHeightField('Height'),
                 ),
 
                 // BMI

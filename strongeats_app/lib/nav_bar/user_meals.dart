@@ -32,36 +32,33 @@ class _UserMealsState extends State<UserMeals> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create new meal"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _dateController,
-              decoration: InputDecoration(
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          TextField(
+            controller: _dateController,
+            decoration: InputDecoration(
               filled: true,
               labelText: 'Meal Date',
               prefixIcon: Icon(Icons.calendar_today),
               enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue),
-                ),
               ),
-              readOnly: true,
-              onTap: () {
-                _selectDate();
-              },
             ),
-
-            CustomTextField(
-              controller: _newMealNameController,
-              text: 'Meal name',
-              obscureText: false,
-              borderColor: Colors.grey,
-              fillColor: Colors.white,
-              textColor: Colors.black,
-            ),
-          ]
-        ),
+            readOnly: true,
+            onTap: () {
+              _selectDate();
+            },
+          ),
+          const SizedBox(height: 10),
+          CustomTextField(
+            controller: _newMealNameController,
+            text: 'Meal name',
+            obscureText: false,
+            borderColor: Colors.grey,
+            fillColor: Colors.white,
+            textColor: Colors.black,
+          ),
+        ]),
         actions: [
           // save button
           MaterialButton(
@@ -79,7 +76,7 @@ class _UserMealsState extends State<UserMeals> {
     );
   }
 
-Future<void> _selectDate() async {
+  Future<void> _selectDate() async {
     DateTime? _picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
