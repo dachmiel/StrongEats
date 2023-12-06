@@ -267,25 +267,27 @@ class _UserDetailsState extends State<UserDetails> {
                         setState(
                           () {
                             if (value == 0) {
-                              currentUnit = 'cm';
-                            } else {
                               currentUnit = 'in';
                             }
+                            //  else {
+                            //   currentUnit = 'in';
+                            // }
                           },
                         );
                       },
                       childDelegate: ListWheelChildBuilderDelegate(
-                          childCount: 2,
+                          childCount: 1,
                           builder: (context, index) {
                             if (index == 0) {
-                              return CmIn(
-                                isItCm: true,
-                              );
-                            } else {
                               return CmIn(
                                 isItCm: false,
                               );
                             }
+                            // else {
+                            //   return CmIn(
+                            //     isItCm: false,
+                            //   );
+                            // }
                           }),
                     ),
                   ),
@@ -390,7 +392,7 @@ class _UserDetailsState extends State<UserDetails> {
 
                 // weight
                 MyTextBox(
-                  text: userData['weight'],
+                  text: userData['weight'] + 'lbs',
                   sectionName: 'Weight',
                   onPressed: () => editField('weight'),
                 ),
