@@ -63,34 +63,34 @@ class _RegisterPageState extends State<RegisterPage> {
             password: _passwordController.text.trim(),
           );
 
-          var age = int.parse(_ageController.text.trim());
-          var weight = int.parse(_weightController.text.trim());
-          var goal = int.parse(_goalController.text.trim());
-          var heightList = _heightController.text.trim().split('\'');
-          var height =
-              (12 * int.parse(heightList[0])) + int.parse(heightList[1]);
-          var male = (_sexController.text.trim().toLowerCase() == "male");
+          // var age = int.parse(_ageController.text.trim());
+          // var weight = int.parse(_weightController.text.trim());
+          // var goal = int.parse(_goalController.text.trim());
+          // var heightList = _heightController.text.trim().split('\'');
+          // var height =
+          //     (12 * int.parse(heightList[0])) + int.parse(heightList[1]);
+          // var male = (_sexController.text.trim().toLowerCase() == "male");
 
-          var maintenance = 0;
-          var calorieGoal = 0;
+          // var maintenance = 0;
+          // var calorieGoal = 0;
 
-          if (male) {
-            maintenance =
-                ((66 + (6.2 * weight) + (12.7 * height) - (6.76 * age)) * 1.465)
-                    .round();
-          } else {
-            maintenance =
-                ((655 + (4.35 * weight) + (4.7 * height) - (4.7 * age)) * 1.465)
-                    .round();
-          }
+          // if (male) {
+          //   maintenance =
+          //       ((66 + (6.2 * weight) + (12.7 * height) - (6.76 * age)) * 1.465)
+          //           .round();
+          // } else {
+          //   maintenance =
+          //       ((655 + (4.35 * weight) + (4.7 * height) - (4.7 * age)) * 1.465)
+          //           .round();
+          // }
 
-          if (goal < weight) {
-            calorieGoal = maintenance - 250;
-          } else if (goal > weight) {
-            calorieGoal = maintenance + 250;
-          } else {
-            calorieGoal = maintenance;
-          }
+          // if (goal < weight) {
+          //   calorieGoal = maintenance - 250;
+          // } else if (goal > weight) {
+          //   calorieGoal = maintenance + 250;
+          // } else {
+          //   calorieGoal = maintenance;
+          // }
 
           //initialize values of user account info in database
           FirebaseFirestore.instance
@@ -106,15 +106,11 @@ class _RegisterPageState extends State<RegisterPage> {
             'weight': _weightController.text.trim(),
             'goal weight': _goalController.text.trim(),
             'height': _heightController.text.trim(),
-            'maintenance calories': maintenance,
-            'goal calories': calorieGoal,
+            // 'maintenance calories': maintenance,
+            // 'goal calories': calorieGoal,
             'bmi': '',
             'intensity': '',
           });
-
-          // add user details
-          // addUserDetails(_firstNameController.text.trim(),
-          //     _lastNameController.text.trim(), _emailController.text.trim());
 
           Navigator.of(context).pop();
         } on FirebaseAuthException catch (e) {
@@ -124,14 +120,6 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     }
   }
-
-  // Future addUserDetails(String firstName, String lastName, String email) async {
-  //   await FirebaseFirestore.instance.collection('users').add({
-  //     'first name': firstName,
-  //     'last name': lastName,
-  //     'email': email,
-  //   });
-  // }
 
   bool passwordConfirmed() {
     if (_passwordController.text.trim() ==

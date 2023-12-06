@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MyFeet extends StatelessWidget {
-  int feet;
+  final int feet;
+  final Color selectedColor;
 
-  MyFeet({required this.feet});
+  MyFeet({required this.feet, required this.selectedColor});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,8 @@ class MyFeet extends StatelessWidget {
             feet.toString(),
             style: TextStyle(
               fontSize: 20,
+              color: selectedColor,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

@@ -71,48 +71,87 @@ class _UserDetailsState extends State<UserDetails> {
     }
   }
 
-  Future<void> editSexField(String field) async {
-    String currentSex = "";
+  Future<void> editSexField() async {
+    String currentSex =
+        ""; //change this to be whatever is currently stored in the database, and for the scroll to be selected to that option by default
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.grey[900],
         title: Text(
-          "$field",
+          "Sex",
           style: const TextStyle(color: Colors.white),
         ),
-        content: ListWheelScrollView.useDelegate(
-          onSelectedItemChanged: (value) {
-            setState(
-              () {
-                if (value == 0) {
-                  currentSex = 'Male';
-                } else {
-                  currentSex = 'Female';
-                }
-              },
-            );
-          },
-          itemExtent: 50,
-          physics: FixedExtentScrollPhysics(),
-          childDelegate: ListWheelChildBuilderDelegate(
-              childCount: 2,
-              builder: (context, index) {
-                if (index == 0) {
-                  return MySex(
-                    isItMale: true,
+        content: SizedBox(
+          height: 100,
+          child: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Container(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[700],
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
+              ),
+              ListWheelScrollView.useDelegate(
+                itemExtent: 35,
+                physics: FixedExtentScrollPhysics(),
+                onSelectedItemChanged: (value) {
+                  setState(
+                    () {
+                      if (value == 0) {
+                        currentSex = 'Male';
+                      } else {
+                        currentSex = 'Female';
+                      }
+                    },
                   );
-                } else {
-                  return MySex(
-                    isItMale: false,
-                  );
-                }
-              }),
+                },
+                childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 2,
+                    builder: (context, index) {
+                      if (index == 0) {
+                        return MySex(
+                          isItMale: true,
+                        );
+                      } else {
+                        return MySex(
+                          isItMale: false,
+                        );
+                      }
+                    }),
+              ),
+            ],
+          ),
         ),
         actions: [
           // save button
           MaterialButton(
-            onPressed: () => Navigator.of(context).pop(currentSex),
+            onPressed: () async {
+              // update in firestore
+              if (currentSex.trim().length == 0) {
+                //if nothing is picked, choose male by default
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'sex': 'Male'});
+              } else {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'sex': currentSex});
+              }
+              Navigator.of(context).pop(currentSex);
+            },
             child: Text(
               'Save',
               style: TextStyle(color: Colors.white),
@@ -130,87 +169,135 @@ class _UserDetailsState extends State<UserDetails> {
         ],
       ),
     );
-
-    // update in firestore
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .update({field: currentSex});
   }
 
-  Future<void> editHeightField(String field) async {
-    String newValue = "";
+  Future<void> editHeightField() async {
+    String currentHeight = "";
+    String currentFeet = "";
+    String currentInches = "";
+    String currentUnit = "in";
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.grey[900],
         title: Text(
-          "$field",
+          "Height",
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: Row(
-          children: [
-            // feet wheel
-            Container(
-              width: 70,
-              child: ListWheelScrollView.useDelegate(
-                itemExtent: 50,
-                physics: FixedExtentScrollPhysics(),
-                childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 13,
-                    builder: (context, index) {
-                      return MyFeet(
-                        feet: index,
-                      );
-                    }),
+        content: SizedBox(
+          height: 100,
+          child: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Container(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[700],
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            // inches wheel
-            Container(
-              width: 70,
-              child: ListWheelScrollView.useDelegate(
-                itemExtent: 50,
-                physics: FixedExtentScrollPhysics(),
-                childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 12,
-                    builder: (context, index) {
-                      return MyInches(
-                        inches: index,
-                      );
-                    }),
-              ),
-            ),
-            // units wheel
-            Container(
-              width: 70,
-              child: ListWheelScrollView.useDelegate(
-                itemExtent: 50,
-                physics: FixedExtentScrollPhysics(),
-                childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 2,
-                    builder: (context, index) {
-                      if (index == 0) {
-                        return CmIn(
-                          isItCm: true,
+              Row(
+                children: [
+                  // feet wheel
+                  Container(
+                    width: 70,
+                    child: ListWheelScrollView.useDelegate(
+                      itemExtent: 35,
+                      physics: FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (value) {
+                        setState(
+                          () {
+                            currentFeet = value.toString();
+                          },
                         );
-                      } else {
-                        return CmIn(
-                          isItCm: false,
+                      },
+                      childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: 13, //states.length
+                          builder: (context, index) {
+                            return MyFeet(
+                              feet: index,
+                              selectedColor: currentFeet == index
+                                  ? Colors.black
+                                  : Colors.white60,
+                            );
+                          }),
+                    ),
+                  ),
+                  // inches wheel
+                  Container(
+                    width: 70,
+                    child: ListWheelScrollView.useDelegate(
+                      itemExtent: 35,
+                      physics: FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (value) {
+                        setState(
+                          () {
+                            currentInches = value.toString();
+                          },
                         );
-                      }
-                    }),
+                        print(currentInches);
+                      },
+                      childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: 12,
+                          builder: (context, index) {
+                            return MyInches(
+                              inches: index,
+                            );
+                          }),
+                    ),
+                  ),
+                  // units wheel
+                  Container(
+                    width: 70,
+                    child: ListWheelScrollView.useDelegate(
+                      itemExtent: 35,
+                      physics: FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (value) {
+                        setState(
+                          () {
+                            if (value == 0) {
+                              currentUnit = 'cm';
+                            } else {
+                              currentUnit = 'in';
+                            }
+                          },
+                        );
+                      },
+                      childDelegate: ListWheelChildBuilderDelegate(
+                          childCount: 2,
+                          builder: (context, index) {
+                            if (index == 0) {
+                              return CmIn(
+                                isItCm: true,
+                              );
+                            } else {
+                              return CmIn(
+                                isItCm: false,
+                              );
+                            }
+                          }),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           // save button
           MaterialButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
+            onPressed: () => Navigator.of(context).pop(currentHeight),
             child: Text(
               'Save',
               style: TextStyle(color: Colors.white),
@@ -230,11 +317,11 @@ class _UserDetailsState extends State<UserDetails> {
     );
 
     // update in firestore
-    if (newValue.trim().length > 0) {
+    if (currentHeight.trim().length > 0) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.email)
-          .update({field: newValue});
+          .update({'height': currentHeight});
     }
   }
 
@@ -298,7 +385,7 @@ class _UserDetailsState extends State<UserDetails> {
                 MyTextBox(
                   text: userData['sex'],
                   sectionName: 'Sex',
-                  onPressed: () => editSexField('Sex'),
+                  onPressed: () => editSexField(),
                 ),
 
                 // weight
@@ -312,7 +399,7 @@ class _UserDetailsState extends State<UserDetails> {
                 MyTextBox(
                   text: userData['height'],
                   sectionName: 'Height',
-                  onPressed: () => editHeightField('Height'),
+                  onPressed: () => editHeightField(),
                 ),
 
                 // BMI

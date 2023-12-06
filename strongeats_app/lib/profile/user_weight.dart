@@ -119,8 +119,8 @@ class _UserWeightState extends State<UserWeight> {
                 ),
                 MyTextBox(
                   text: userData['goal weight'],
-                  sectionName: 'weight',
-                  onPressed: () => editField('weight'),
+                  sectionName: 'Goal Weight',
+                  onPressed: () => editField('goal weight'),
                 ),
               ],
             );
