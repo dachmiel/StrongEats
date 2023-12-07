@@ -412,7 +412,10 @@ class _UserDetailsState extends State<UserDetails> {
         .get();
 
     String currentAge = userDoc.get('age') ?? "0";
-    // DateTime userBirthday = DateTime.parse(userDoc.get('birthday') ?? "");
+    String birthdayString = userDoc.get('birthday') ?? "";
+
+    // Convert birthday string to DateTime
+    DateTime userBirthday = DateTime.tryParse(birthdayString) ?? dateTime;
 
     await showCupertinoModalPopup(
       context: context,
@@ -434,7 +437,7 @@ class _UserDetailsState extends State<UserDetails> {
                   SizedBox(
                     height: 250,
                     child: CupertinoDatePicker(
-                      initialDateTime: dateTime,
+                      initialDateTime: userBirthday,
                       onDateTimeChanged: (DateTime newTime) {
                         setState(() => dateTime = newTime);
                       },
