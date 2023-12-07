@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/text_box.dart';
@@ -72,8 +73,14 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Future<void> editSexField() async {
-    String currentSex =
-        ""; //change this to be whatever is currently stored in the database, and for the scroll to be selected to that option by default
+    // Retrieve user's current height from Firebase
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    String currentSex = userDoc.get('sex') ?? "";
+
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -105,6 +112,9 @@ class _UserDetailsState extends State<UserDetails> {
               ListWheelScrollView.useDelegate(
                 itemExtent: 35,
                 physics: FixedExtentScrollPhysics(),
+                controller: FixedExtentScrollController(
+                  initialItem: currentSex == 'Male' ? 0 : 1,
+                ),
                 onSelectedItemChanged: (value) {
                   setState(
                     () {
@@ -135,7 +145,7 @@ class _UserDetailsState extends State<UserDetails> {
         ),
         actions: [
           // save button
-          MaterialButton(
+          ElevatedButton(
             onPressed: () async {
               // update in firestore
               if (currentSex.trim().length == 0) {
@@ -159,7 +169,7 @@ class _UserDetailsState extends State<UserDetails> {
           ),
 
           // cancel button
-          MaterialButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
@@ -176,6 +186,19 @@ class _UserDetailsState extends State<UserDetails> {
     String currentFeet = "";
     String currentInches = "";
     String currentUnit = "in";
+
+    // Retrieve user's current height from Firebase
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    String userHeight = userDoc.get('height') ?? "0'0";
+    List<String> heightParts = userHeight.split("'");
+    if (heightParts.length == 2) {
+      currentFeet = heightParts[0];
+      currentInches = heightParts[1];
+    }
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -215,6 +238,9 @@ class _UserDetailsState extends State<UserDetails> {
                     child: ListWheelScrollView.useDelegate(
                       itemExtent: 35,
                       physics: FixedExtentScrollPhysics(),
+                      controller: FixedExtentScrollController(
+                        initialItem: int.tryParse(currentFeet) ?? 0,
+                      ),
                       onSelectedItemChanged: (value) {
                         setState(
                           () {
@@ -240,13 +266,15 @@ class _UserDetailsState extends State<UserDetails> {
                     child: ListWheelScrollView.useDelegate(
                       itemExtent: 35,
                       physics: FixedExtentScrollPhysics(),
+                      controller: FixedExtentScrollController(
+                        initialItem: int.tryParse(currentInches) ?? 0,
+                      ),
                       onSelectedItemChanged: (value) {
                         setState(
                           () {
                             currentInches = value.toString();
                           },
                         );
-                        print(currentInches);
                       },
                       childDelegate: ListWheelChildBuilderDelegate(
                           childCount: 12,
@@ -299,7 +327,33 @@ class _UserDetailsState extends State<UserDetails> {
         actions: [
           // save button
           MaterialButton(
-            onPressed: () => Navigator.of(context).pop(currentHeight),
+            onPressed: () async {
+              currentHeight = currentFeet + "'" + currentInches;
+              // update in firestore
+              if (currentHeight.trim().length == 1) {
+                //if nothing is picked, choose male by default
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'height': "0'0"});
+              } else if (currentInches.trim().length == 0) {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'height': currentFeet + "'0"});
+              } else if (currentFeet.trim().length == 0) {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'height': "0'" + currentInches});
+              } else {
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.email)
+                    .update({'height': currentHeight});
+              }
+              Navigator.of(context).pop(currentHeight);
+            },
             child: Text(
               'Save',
               style: TextStyle(color: Colors.white),
@@ -317,14 +371,109 @@ class _UserDetailsState extends State<UserDetails> {
         ],
       ),
     );
+  }
 
-    // update in firestore
-    if (currentHeight.trim().length > 0) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .update({'height': currentHeight});
+  calculateAge(DateTime birthdate) {
+    DateTime now = DateTime.now();
+    int age = now.year - birthdate.year;
+
+    if (now.month < birthdate.month ||
+        (now.month == birthdate.month && now.day < birthdate.day)) {
+      age--;
     }
+
+    // Use the age as needed
+    return age;
+  }
+
+  void saveAge(int age) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({'age': age.toString()});
+  }
+
+  void saveBirthday(DateTime birthday) async {
+    // Convert DateTime to a formatted string
+    String formattedBirthday = birthday.toIso8601String();
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({'birthday': formattedBirthday});
+  }
+
+  Future<void> editAgeField() async {
+    DateTime dateTime = DateTime.now();
+    // Retrieve user's current height from Firebase
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    String currentAge = userDoc.get('age') ?? "0";
+    // DateTime userBirthday = DateTime.parse(userDoc.get('birthday') ?? "");
+
+    await showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Center(
+        child: SingleChildScrollView(
+          child: AlertDialog(
+            backgroundColor: Colors.grey[900],
+            title: Text(
+              "Birthday",
+              style: const TextStyle(color: Colors.white),
+            ),
+            content: Container(
+              width:
+                  MediaQuery.of(context).size.width * 0.8, // Set the width here
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 250,
+                    child: CupertinoDatePicker(
+                      initialDateTime: dateTime,
+                      onDateTimeChanged: (DateTime newTime) {
+                        setState(() => dateTime = newTime);
+                      },
+                      use24hFormat: true,
+                      mode: CupertinoDatePickerMode.date,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          saveAge(calculateAge(dateTime));
+                          saveBirthday(dateTime);
+                          Navigator.of(context).pop(dateTime);
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -380,7 +529,7 @@ class _UserDetailsState extends State<UserDetails> {
                 MyTextBox(
                   text: userData['age'],
                   sectionName: 'Age',
-                  onPressed: () => editField('age'),
+                  onPressed: () => editAgeField(),
                 ),
 
                 // sex
