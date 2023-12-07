@@ -67,23 +67,6 @@ class _UserDetailsState extends State<UserDetails> {
             hintText: "Enter new $field",
             hintStyle: TextStyle(color: Colors.grey),
           ),
-          validator: (text) {
-            // FIX THIS SO IT SHOWS ERRORS
-            if (text!.isEmpty) {
-              return "Enter value";
-            } else {
-              final doubleRegex = RegExp(r'^\d*\.?\d+$');
-              if (!doubleRegex.hasMatch(text)) {
-                return "Enter valid positive value";
-              }
-
-              double value = double.parse(text);
-              if (value <= 0) {
-                return "Enter a positive value";
-              }
-            }
-            return null;
-          },
           onChanged: (value) {
             newValue = value;
           },
@@ -91,7 +74,25 @@ class _UserDetailsState extends State<UserDetails> {
         actions: [
           // save button
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
+            onPressed: () {
+              if (validateInput(newValue)) {
+                // Valid input, save to Firestore
+                Navigator.of(context).pop(newValue);
+                updateFirestore(field, newValue);
+              } else {
+                // Invalid input, show an error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.grey[900],
+                    content: Text(
+                      "Invalid input. Please enter a valid value.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
             child: Text(
               'Save',
               style: TextStyle(color: Colors.white),
@@ -109,14 +110,31 @@ class _UserDetailsState extends State<UserDetails> {
         ],
       ),
     );
+  }
 
-    // update in firestore
-    if (newValue.trim().length > 0) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .update({field: newValue});
+  void updateFirestore(String field, String newValue) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({field: newValue});
+  }
+
+  bool validateInput(String input) {
+    if (input.isEmpty) {
+      return false; // Empty input is considered invalid
     }
+
+    final doubleRegex = RegExp(r'^\d*\.?\d+$');
+    if (!doubleRegex.hasMatch(input)) {
+      return false; // Input contains non-numeric characters
+    }
+
+    double value = double.parse(input);
+    if (value < 0) {
+      return false; // Input is a negative number
+    }
+
+    return true; // Input is valid
   }
 
   Future<void> editSexField() async {

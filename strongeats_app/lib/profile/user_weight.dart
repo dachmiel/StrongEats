@@ -88,7 +88,25 @@ class _UserWeightState extends State<UserWeight> {
         actions: [
           // save button
           ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
+            onPressed: () {
+              if (validateInput(newValue)) {
+                // Valid input, save to Firestore
+                Navigator.of(context).pop(newValue);
+                updateFirestore(field, newValue);
+              } else {
+                // Invalid input, show an error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.grey[900],
+                    content: Text(
+                      "Invalid input. Please enter a valid value.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
             child: Text(
               'Save',
               style: TextStyle(color: Colors.white),
@@ -106,14 +124,31 @@ class _UserWeightState extends State<UserWeight> {
         ],
       ),
     );
+  }
 
-    // update in firestore
-    if (newValue.trim().length > 0) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .update({field: newValue});
+  void updateFirestore(String field, String newValue) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .update({field: newValue});
+  }
+
+  bool validateInput(String input) {
+    if (input.isEmpty) {
+      return false; // Empty input is considered invalid
     }
+
+    final doubleRegex = RegExp(r'^\d*\.?\d+$');
+    if (!doubleRegex.hasMatch(input)) {
+      return false; // Input contains non-numeric characters
+    }
+
+    double value = double.parse(input);
+    if (value < 0) {
+      return false; // Input is a negative number
+    }
+
+    return true; // Input is valid
   }
 
   @override
