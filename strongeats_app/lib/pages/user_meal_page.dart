@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
@@ -23,7 +24,7 @@ class _MealPageState extends State<MealPage> {
     super.initState();
     _foodsStream = FirebaseFirestore.instance
         .collection('mealHistory')
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userMeals')
         .doc(widget.mealName)
         .collection('userFoods')
@@ -57,6 +58,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect weight
             CustomTextField(
@@ -67,6 +69,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect servings
             CustomTextField(
@@ -77,6 +80,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect calories
             CustomTextField(
@@ -87,6 +91,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect proteins
             CustomTextField(
@@ -97,6 +102,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // collect carbs
             CustomTextField(
@@ -107,6 +113,7 @@ class _MealPageState extends State<MealPage> {
               borderColor: Colors.grey,
               textColor: Colors.black,
             ),
+            const SizedBox(height: 5),
 
             // fats
             CustomTextField(
@@ -202,7 +209,7 @@ class _MealPageState extends State<MealPage> {
           }
           // stream is connected but data is not coming yet
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return Center(child: CircularProgressIndicator());
           }
 
           var docs = snapshot.data!.docs;
@@ -227,9 +234,9 @@ class _MealPageState extends State<MealPage> {
               weight: docs[index]['weight'],
               servings: docs[index]['servings'],
               calories: docs[index]['calories'],
-              proteins: docs[index]['proteins'],
-              carbs: docs[index]['carbs'],
-              fats: docs[index]['fats'],
+              proteins: docs[index]['protein'],
+              carbs: docs[index]['carb'],
+              fats: docs[index]['fat'],
               // isCompleted: value
               //     .getRelevantWorkout(widget.workoutName)
               //     .exercises[index]

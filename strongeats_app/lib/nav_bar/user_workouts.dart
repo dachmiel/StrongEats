@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
 import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
@@ -19,7 +20,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
   // read this users workouts from database
   final _workoutsStream = FirebaseFirestore.instance
       .collection('workoutHistory')
-      .doc(uid)
+      .doc(FirebaseAuth.instance.currentUser!.email)
       .collection('userWorkouts')
       .snapshots();
 
@@ -138,7 +139,7 @@ class _UserWorkoutsState extends State<UserWorkouts> {
           }
           // stream is connected but data is not coming yet
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return Center(child: CircularProgressIndicator());
           }
           // successful connection and data received
           var docs = snapshot.data!.docs;

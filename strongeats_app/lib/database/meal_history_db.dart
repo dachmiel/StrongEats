@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:strongeats/auth/uid.dart' as userID;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/objects/meal.dart';
 import 'package:strongeats/objects/food.dart';
 
 class MealHistoryDB {
-  final uid = userID.uid;
-
   // collection reference
   final CollectionReference mealHistory =
       FirebaseFirestore.instance.collection('mealHistory');
 
   Future newMeal(Meal meal) async {
     return await mealHistory
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userMeals')
         .doc(meal.name)
         .set({'name': meal.name});
@@ -20,10 +19,10 @@ class MealHistoryDB {
 
   Future addFood(String mealName, Food food) async {
     return await mealHistory
-        .doc(uid)
+        .doc(FirebaseAuth.instance.currentUser!.email)
         .collection('userMeals')
         .doc(mealName)
-        .collection('foods')
+        .collection('userFoods')
         .doc(food.name)
         .set({
       'name': food.name,
@@ -39,11 +38,15 @@ class MealHistoryDB {
   Future deleteMeal(String mealName) async {
     try {
       // Delete the meal document
-      await mealHistory.doc(uid).collection('userMeals').doc(mealName).delete();
+      await mealHistory
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('userMeals')
+          .doc(mealName)
+          .delete();
 
       // delete associated foods
       await mealHistory
-          .doc(uid)
+          .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('userMeals')
           .doc(mealName)
           .collection('userFoods')
@@ -62,7 +65,7 @@ class MealHistoryDB {
     try {
       // Delete the food document
       await mealHistory
-          .doc(uid)
+          .doc(FirebaseAuth.instance.currentUser!.email)
           .collection('userMeals')
           .doc(mealName)
           .collection('userFoods')

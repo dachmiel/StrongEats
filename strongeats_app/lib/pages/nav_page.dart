@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:strongeats/nav_bar/user_home.dart';
 import 'package:strongeats/nav_bar/user_meals.dart';
 import 'package:strongeats/nav_bar/user_profile.dart';
+import 'package:strongeats/profile/user_details.dart';
 import 'package:strongeats/nav_bar/user_workouts.dart';
 
 class NavPage extends StatefulWidget {
@@ -19,6 +20,10 @@ class _NavPageState extends State<NavPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 
   final List<String> _pageTitles = [
@@ -47,20 +52,18 @@ class _NavPageState extends State<NavPage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-            },
+            onTap: signOut,
             child: Icon(Icons.logout),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(
-            height: 1,
-            thickness: 1,
-            color: Colors.grey[600],
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(1),
+        //   child: Divider(
+        //     height: 1,
+        //     thickness: 1,
+        //     color: Colors.grey[600],
+        //   ),
+        // ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

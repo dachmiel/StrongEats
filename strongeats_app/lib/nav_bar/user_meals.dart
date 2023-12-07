@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:strongeats/auth/uid.dart';
 import 'package:strongeats/custom_classes/customTextField.dart';
@@ -6,6 +7,7 @@ import 'package:strongeats/custom_classes/workout_meal_list_tile.dart';
 import 'package:strongeats/objects/meal.dart';
 import 'package:strongeats/database/meal_history_db.dart';
 import '../pages/user_meal_page.dart';
+import 'package:intl/intl.dart';
 
 class UserMeals extends StatefulWidget {
   @override
@@ -14,12 +16,13 @@ class UserMeals extends StatefulWidget {
 
 class _UserMealsState extends State<UserMeals> {
   // text controller
+
   final _newMealNameController = TextEditingController();
   final _dateController = TextEditingController();
   // read this users meals from database
   final _mealsStream = FirebaseFirestore.instance
       .collection('mealHistory')
-      .doc(uid)
+      .doc(FirebaseAuth.instance.currentUser!.email)
       .collection('userMeals')
       .snapshots();
 
@@ -29,14 +32,33 @@ class _UserMealsState extends State<UserMeals> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text("Create new meal"),
-        content: CustomTextField(
-          controller: _newMealNameController,
-          text: 'Meal name',
-          obscureText: false,
-          borderColor: Colors.grey,
-          fillColor: Colors.white,
-          textColor: Colors.black,
-        ),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          TextField(
+            controller: _dateController,
+            decoration: InputDecoration(
+              filled: true,
+              labelText: 'Meal Date',
+              prefixIcon: Icon(Icons.calendar_today),
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
+            readOnly: true,
+            onTap: () {
+              _selectDate();
+            },
+          ),
+          const SizedBox(height: 10),
+          CustomTextField(
+            controller: _newMealNameController,
+            text: 'Meal name',
+            obscureText: false,
+            borderColor: Colors.grey,
+            fillColor: Colors.white,
+            textColor: Colors.black,
+          ),
+        ]),
         actions: [
           // save button
           MaterialButton(
@@ -52,6 +74,22 @@ class _UserMealsState extends State<UserMeals> {
         ],
       ),
     );
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? _picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (_picked != null) {
+      String formattedDate = DateFormat("MMMM dd, yyyy").format(_picked);
+      setState(() {
+        _dateController.text = formattedDate.toString();
+      });
+    }
   }
 
   // go to a specific meal page
@@ -73,7 +111,7 @@ class _UserMealsState extends State<UserMeals> {
 
     // add meal to mealdata list
     // Provider.of<MealData>(context, listen: false).addMeal(newMealName);
-    MealHistoryDB().newMeal(Meal(name: newMealName, foods: []));
+    MealHistoryDB().newMeal(Meal(name: (date + " " + newMealName), foods: []));
 
     Navigator.pop(context);
     clear();
