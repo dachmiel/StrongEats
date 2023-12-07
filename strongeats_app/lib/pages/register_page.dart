@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:strongeats/custom_classes/myButton.dart';
 import 'package:strongeats/custom_classes/registerTextField.dart';
+import 'package:strongeats/custom_classes/selectorTextField.dart';
+import 'package:strongeats/custom_classes/text_box.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -63,10 +66,15 @@ class _RegisterPageState extends State<RegisterPage> {
             password: _passwordController.text.trim(),
           );
 
-          // var age = int.parse(_ageController.text.trim());
-          // var weight = int.parse(_weightController.text.trim());
-          // var goal = int.parse(_goalController.text.trim());
+          var age = int.parse(_ageController.text.trim());
+          var weight = int.parse(_weightController.text.trim());
+          var goal = int.parse(_goalController.text.trim());
           // var heightList = _heightController.text.trim().split('\'');
+          // var feet = int.parse(heightList[0]);
+          // var inches = int.parse(heightList[1]);
+
+          // print(feet);
+          // print(inches);
           // var height =
           //     (12 * int.parse(heightList[0])) + int.parse(heightList[1]);
           // var male = (_sexController.text.trim().toLowerCase() == "male");
@@ -106,8 +114,8 @@ class _RegisterPageState extends State<RegisterPage> {
             'weight': _weightController.text.trim(),
             'goal weight': _goalController.text.trim(),
             'height': _heightController.text.trim(),
-            // 'maintenance calories': maintenance,
-            // 'goal calories': calorieGoal,
+            'maintenance calories': 'maintenance',
+            'goal calories': 'calorieGoal',
             'bmi': '',
             'intensity': '',
             'birthday': '',
@@ -129,6 +137,102 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       return false;
     }
+  }
+
+  calculateAge(DateTime birthdate) {
+    DateTime now = DateTime.now();
+    int age = now.year - birthdate.year;
+
+    if (now.month < birthdate.month ||
+        (now.month == birthdate.month && now.day < birthdate.day)) {
+      age--;
+    }
+
+    // Use the age as needed
+    return age;
+  }
+
+  void saveAge(int age) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .set({'age': age.toString()});
+  }
+
+  void saveBirthday(DateTime birthday) async {
+    // Convert DateTime to a formatted string
+    String formattedBirthday = birthday.toIso8601String();
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .set({'birthday': formattedBirthday});
+  }
+
+  Future<void> editAgeField() async {
+    DateTime dateTime = DateTime.now();
+    // Retrieve user's current height from Firebase
+
+    await showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Center(
+        child: SingleChildScrollView(
+          child: AlertDialog(
+            backgroundColor: Colors.grey[900],
+            title: Text(
+              "Birthday",
+              style: const TextStyle(color: Colors.white),
+            ),
+            content: Container(
+              width:
+                  MediaQuery.of(context).size.width * 0.8, // Set the width here
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 250,
+                    child: CupertinoDatePicker(
+                      initialDateTime: dateTime,
+                      onDateTimeChanged: (DateTime newTime) {
+                        setState(() => dateTime = newTime);
+                      },
+                      use24hFormat: true,
+                      mode: CupertinoDatePickerMode.date,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          saveAge(calculateAge(dateTime));
+                          saveBirthday(dateTime);
+                          Navigator.of(context).pop(dateTime);
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -275,6 +379,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: false,
                     ),
                   ),
+
+                  // // Age textfield
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: SelectorTextField(
+                  //     controller: _ageController,
+                  //     sectionName: 'Age',
+                  //     onPressed: () => editAgeField(),
+                  //     text: "Age",
+                  //   ),
+                  // ),
 
                   const SizedBox(height: 10),
 
