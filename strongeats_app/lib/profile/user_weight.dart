@@ -27,20 +27,67 @@ class _UserWeightState extends State<UserWeight> {
           "Edit $field",
           style: const TextStyle(color: Colors.white),
         ),
-        content: TextField(
+        content: TextFormField(
           autofocus: true,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFD32F2F),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            focusedErrorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFD32F2F),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            fillColor: Colors.white,
+            filled: true,
             hintText: "Enter new $field",
             hintStyle: TextStyle(color: Colors.grey),
           ),
+          validator: (text) {
+            // FIX THIS SO IT SHOWS ERRORS
+            if (text!.isEmpty) {
+              return "Enter value";
+            } else {
+              final doubleRegex = RegExp(r'^\d*\.?\d+$');
+              if (!doubleRegex.hasMatch(text)) {
+                return "Enter valid positive value";
+              }
+
+              double value = double.parse(text);
+              if (value <= 0) {
+                return "Enter a positive value";
+              }
+            }
+            return null;
+          },
           onChanged: (value) {
             newValue = value;
           },
         ),
         actions: [
           // save button
-          MaterialButton(
+          ElevatedButton(
             onPressed: () => Navigator.of(context).pop(newValue),
             child: Text(
               'Save',
@@ -49,7 +96,7 @@ class _UserWeightState extends State<UserWeight> {
           ),
 
           // cancel button
-          MaterialButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',

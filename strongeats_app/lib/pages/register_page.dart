@@ -110,6 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
             // 'goal calories': calorieGoal,
             'bmi': '',
             'intensity': '',
+            'birthday': '',
           });
 
           Navigator.of(context).pop();

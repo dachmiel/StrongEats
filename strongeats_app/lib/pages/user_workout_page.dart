@@ -797,6 +797,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 borderColor: Colors.grey,
                 textColor: Colors.black,
               ),
+              const SizedBox(height: 5),
 
               // weight
               CustomTextField(
@@ -807,6 +808,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 borderColor: Colors.grey,
                 textColor: Colors.black,
               ),
+              const SizedBox(height: 5),
 
               // reps
               CustomTextField(
@@ -817,6 +819,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 borderColor: Colors.grey,
                 textColor: Colors.black,
               ),
+              const SizedBox(height: 5),
 
               // sets
               CustomTextField(
